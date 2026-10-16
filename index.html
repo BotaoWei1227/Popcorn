@@ -1,976 +1,1057 @@
 <!DOCTYPE html>
-<html lang="zh-TW" class="dark">
+<html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>黃玉翔會不會來？8-BIT 復古轉盤大冒險 🎰</title>
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Retro Pixel Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Noto+Sans+TC:wght@700;900&display=swap" rel="stylesheet">
-  
-  <style>
-    /* Retro Arcade Styling */
-    body {
-      font-family: 'VT323', 'Noto Sans TC', monospace;
-      background-color: #080711;
-      background-image: 
-        radial-gradient(#1f1b3a 15%, transparent 16%),
-        radial-gradient(#1f1b3a 15%, transparent 16%);
-      background-size: 20px 20px;
-      background-position: 0 0, 10px 10px;
-      color: #00FF66;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>黃玉翔會不會來？ - 8-Bit 復古街機轉盤 (307課表與隨機事件版)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0d081d;
+            --card-bg: #1a1235;
+            --accent-green: #00ff88;
+            --accent-red: #ff2a6d;
+            --accent-gold: #ffcc00;
+            --accent-cyan: #05d9e8;
+            --accent-purple: #b537f2;
+            --text-color: #f0f0f0;
+        }
 
-    .font-pixel-title {
-      font-family: 'Press Start 2P', 'Noto Sans TC', cursive;
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
 
-    /* CRT Scanline Overlay Effect */
-    .crt-overlay::after {
-      content: " ";
-      display: block;
-      position: absolute;
-      top: 0; left: 0; bottom: 0; right: 0;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%);
-      background-size: 100% 4px;
-      z-index: 40;
-      pointer-events: none;
-      opacity: 0.6;
-    }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Noto Sans TC', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 8px;
+            background-image: 
+                radial-gradient(#1f1545 15%, transparent 16%),
+                radial-gradient(#1f1545 15%, transparent 16%);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+            overflow-x: hidden;
+        }
 
-    /* 8-Bit Pixelated Border Helpers */
-    .pixel-card-green {
-      background: #0d1f18;
-      border: 4px solid #00FF66;
-      box-shadow: 6px 6px 0px #003311, -4px 0 0 0 #00FF66, 4px 0 0 0 #00FF66, 0 -4px 0 0 #00FF66, 0 4px 0 0 #00FF66;
-    }
+        /* CRT Scanline Effect */
+        .crt-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(
+                rgba(18, 16, 16, 0) 50%, 
+                rgba(0, 0, 0, 0.25) 50%
+            );
+            background-size: 100% 4px;
+            z-index: 999;
+            pointer-events: none;
+            opacity: 0.5;
+        }
 
-    .pixel-card-gold {
-      background: #1f1a0d;
-      border: 4px solid #FFCC00;
-      box-shadow: 6px 6px 0px #332900, -4px 0 0 0 #FFCC00, 4px 0 0 0 #FFCC00, 0 -4px 0 0 #FFCC00, 0 4px 0 0 #FFCC00;
-    }
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
 
-    .pixel-btn {
-      position: relative;
-      border: 4px solid #000;
-      box-shadow: 0 6px 0 #000;
-      transition: all 0.1s ease;
-    }
+        .header h1 {
+            font-family: 'Press Start 2P', 'Noto Sans TC', cursive;
+            font-size: 1.5rem;
+            color: var(--accent-gold);
+            text-shadow: 3px 3px 0px #000, -2px -2px 0px #ff2a6d;
+            letter-spacing: 2px;
+            margin-bottom: 6px;
+        }
 
-    .pixel-btn:active {
-      transform: translateY(4px);
-      box-shadow: 0 2px 0 #000;
-    }
+        .header p {
+            font-size: 0.85rem;
+            color: var(--accent-cyan);
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
 
-    /* Image pixel rendering */
-    .pixel-img {
-      image-rendering: pixelated;
-      image-rendering: crisp-edges;
-    }
+        .main-layout {
+            width: 100%;
+            max-width: 1100px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
 
-    /* Retro Text Glow */
-    .glow-green-text {
-      text-shadow: 0 0 8px rgba(0, 255, 102, 0.8), 2px 2px 0px #000;
-    }
+        @media (min-width: 900px) {
+            .main-layout {
+                grid-template-columns: 310px 1fr 260px;
+            }
+        }
 
-    .glow-red-text {
-      text-shadow: 0 0 8px rgba(255, 0, 85, 0.8), 2px 2px 0px #000;
-    }
+        /* Pixel Box Styling */
+        .pixel-box {
+            background: var(--card-bg);
+            border: 4px solid #fff;
+            box-shadow: 
+                0 0 0 4px #000, 
+                5px 5px 0px 4px #000;
+            padding: 14px;
+            position: relative;
+            margin-bottom: 12px;
+        }
 
-    .glow-yellow-text {
-      text-shadow: 0 0 8px rgba(255, 204, 0, 0.8), 2px 2px 0px #000;
-    }
+        .pixel-title {
+            font-family: 'Press Start 2P', 'Noto Sans TC', monospace;
+            font-size: 0.8rem;
+            color: var(--accent-gold);
+            background: #000;
+            display: inline-block;
+            padding: 4px 8px;
+            margin-bottom: 10px;
+            border: 2px solid var(--accent-gold);
+        }
 
-    /* Avatar Filters for Result Reaction */
-    .avatar-win {
-      filter: drop-shadow(0 0 12px #00FF66) brightness(1.1);
-    }
+        /* Left Panel - Profile & Schedule */
+        .profile-card { text-align: center; }
 
-    .avatar-lose {
-      filter: grayscale(100%) contrast(180%) brightness(0.8);
-    }
+        .avatar-container {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 10px;
+            border: 4px solid var(--accent-gold);
+            box-shadow: 0 0 0 4px #000;
+            overflow: hidden;
+            background: #000;
+            cursor: pointer;
+        }
 
-    /* Custom Scrollbar for Retro Log */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #080711;
-      border: 2px solid #00FF66;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #00FF66;
-    }
-  </style>
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            image-rendering: pixelated;
+        }
+
+        .badge-school {
+            background: #e63946;
+            color: #fff;
+            padding: 2px 6px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border-radius: 2px;
+            display: inline-block;
+            margin-bottom: 4px;
+        }
+
+        /* Schedule selector */
+        .day-buttons {
+            display: flex;
+            gap: 4px;
+            margin-top: 8px;
+            justify-content: center;
+        }
+
+        .btn-day {
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            background: #1f1838;
+            color: #aaa;
+            border: 2px solid #555;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-day.active {
+            background: var(--accent-gold);
+            color: #000;
+            border-color: #000;
+        }
+
+        .schedule-info {
+            font-size: 0.75rem;
+            background: #000;
+            border: 2px solid #333;
+            padding: 8px;
+            margin-top: 8px;
+            text-align: left;
+            line-height: 1.5;
+        }
+
+        .subject-tag {
+            display: inline-block;
+            padding: 1px 4px;
+            border-radius: 2px;
+            font-size: 0.7rem;
+            margin: 1px;
+        }
+
+        .tag-main { background: #b5179e; color: #fff; } /* Core subject */
+        .tag-easy { background: #2a9d8f; color: #fff; } /* Non-core */
+
+        /* Center Panel - Wheel */
+        .wheel-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .wheel-wrapper {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 10px auto;
+        }
+
+        #wheelCanvas {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            box-shadow: 
+                0 0 0 6px #000,
+                0 0 0 10px var(--accent-gold),
+                0 0 20px rgba(0,255,200,0.3);
+        }
+
+        .pointer {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 14px solid transparent;
+            border-right: 14px solid transparent;
+            border-top: 28px solid var(--accent-gold);
+            filter: drop-shadow(0px 3px 0px #000);
+            z-index: 10;
+        }
+
+        .center-avatar-hub {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            border: 4px solid var(--accent-gold);
+            box-shadow: 0 0 0 3px #000;
+            overflow: hidden;
+            background: #000;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .center-avatar-hub img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .btn-pixel {
+            font-family: 'Press Start 2P', 'Noto Sans TC', sans-serif;
+            font-size: 0.75rem;
+            padding: 8px 12px;
+            background: #2a2a40;
+            color: #fff;
+            border: 3px solid #fff;
+            box-shadow: 3px 3px 0px #000;
+            cursor: pointer;
+            transition: all 0.1s;
+        }
+
+        .btn-pixel:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px #000;
+        }
+
+        .btn-gold { background: var(--accent-gold); color: #000; border-color: #000; font-weight: bold; }
+        .btn-green { background: var(--accent-green); color: #000; border-color: #000; font-weight: bold; }
+        .btn-cyan { background: var(--accent-cyan); color: #000; border-color: #000; font-weight: bold; }
+
+        .result-box {
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+            width: 100%;
+            background: #090514;
+            border: 3px solid var(--accent-cyan);
+            box-shadow: 4px 4px 0px #000;
+            padding: 10px;
+            text-align: center;
+        }
+
+        /* Right Panel - Random Events & Telephone */
+        .phone-box {
+            background: #2d0b2e;
+            border: 3px solid var(--accent-purple);
+            box-shadow: 3px 3px 0px #000;
+            padding: 12px;
+            text-align: center;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .phone-btn {
+            background: linear-gradient(135deg, #ff007f, #b537f2);
+            color: #fff;
+            border: 3px solid #fff;
+            box-shadow: 3px 3px 0px #000;
+            font-weight: bold;
+            font-size: 0.8rem;
+            padding: 10px;
+            width: 100%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+        .phone-btn:hover {
+            filter: brightness(1.2);
+        }
+
+        .phone-status {
+            font-size: 0.75rem;
+            margin-top: 6px;
+            color: var(--accent-cyan);
+            min-height: 20px;
+        }
+
+        .event-toggle-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 0.75rem;
+        }
+
+        .event-card {
+            background: #000;
+            border: 2px solid #444;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .event-card.active {
+            border-color: var(--accent-red);
+            background: #20050c;
+        }
+
+        .event-card input {
+            cursor: pointer;
+        }
+
+        /* Speech Bubble */
+        .speech-bubble {
+            position: absolute;
+            top: -42px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fff;
+            color: #000;
+            padding: 4px 8px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            white-space: nowrap;
+            border: 2px solid #000;
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+            z-index: 20;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .speech-bubble.show { opacity: 1; }
+
+        /* Log Box */
+        .log-box {
+            max-height: 120px;
+            overflow-y: auto;
+            font-size: 0.75rem;
+            background: #000;
+            border: 2px solid #333;
+            padding: 6px;
+            font-family: monospace;
+            text-align: left;
+        }
+
+        .tag-yes { color: var(--accent-green); font-weight: bold; }
+        .tag-no { color: var(--accent-red); font-weight: bold; }
+        .prob-badge {
+            background: #222;
+            color: var(--accent-gold);
+            padding: 2px 6px;
+            border: 1px solid var(--accent-gold);
+            font-size: 0.75rem;
+            display: inline-block;
+            margin-top: 4px;
+        }
+
+        #confettiCanvas {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 998;
+        }
+    </style>
 </head>
-<body class="min-h-screen pb-12 flex flex-col justify-between selection:bg-green-500 selection:text-black crt-overlay">
+<body>
 
-  <!-- Toast Notification System -->
-  <div id="toast" class="fixed top-5 right-5 z-50 transform translate-y-[-100px] opacity-0 transition-all duration-200 bg-black text-green-400 p-4 border-4 border-green-400 shadow-[6px_6px_0px_#000] flex items-center space-x-3 pointer-events-none">
-    <i id="toast-icon" class="fas fa-terminal text-lg text-yellow-400"></i>
-    <span id="toast-message" class="font-bold text-lg tracking-wider">SYSTEM READY</span>
-  </div>
+    <div class="crt-overlay"></div>
+    <canvas id="confettiCanvas"></canvas>
 
-  <!-- Main Container -->
-  <div class="max-w-5xl mx-auto px-4 pt-4 w-full flex-grow">
-    
-    <!-- Header / Arcade Marquee -->
-    <header class="text-center my-6 space-y-3">
-      <div class="inline-block bg-black text-yellow-400 border-2 border-yellow-400 px-4 py-1 text-sm font-bold tracking-widest uppercase mb-1">
-        ★ ARCADE EDITION v2.5 · 本人登場版 ★
-      </div>
-      
-      <h1 class="text-3xl sm:text-5xl font-extrabold tracking-wider font-pixel-title glow-yellow-text text-yellow-400">
-        黃玉翔會不會來？
-      </h1>
-      <p class="text-xl text-green-400 tracking-widest glow-green-text">
-        [ 8-BIT 復古機率轉盤大冒險 ]
-      </p>
-    </header>
-
-    <!-- Top Controls: Sound & Upload -->
-    <div class="flex justify-between items-center mb-4 px-2">
-      <div class="flex items-center space-x-3 text-xs text-yellow-400 font-mono tracking-widest">
-        <span class="animate-pulse">●</span>
-        <span>CHARACTER LOADED: 19169_2.JPG</span>
-      </div>
-      <div class="flex space-x-2">
-        <button id="sound-toggle" class="bg-black text-green-400 border-2 border-green-400 px-3 py-1 text-sm font-bold hover:bg-green-950 transition flex items-center space-x-2">
-          <i class="fas fa-volume-up text-yellow-400" id="sound-icon"></i>
-          <span id="sound-text">SOUND: ON</span>
-        </button>
-      </div>
+    <div class="header">
+        <h1>黃玉翔會不會來？</h1>
+        <p>🎮 8-BIT 復古街機轉盤 (307課表與動態事件版) 🎮</p>
     </div>
 
-    <!-- Character Profile & Mode Selector -->
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-8 items-center">
-      
-      <!-- Huang Yu-Xiang Character Profile Card -->
-      <div class="md:col-span-5 pixel-card-gold p-4 relative group">
-        <div class="flex items-center space-x-4">
-          <!-- Pixel Avatar Frame & Mode Switcher -->
-          <div class="relative w-24 h-24 sm:w-28 sm:h-28 border-4 border-yellow-400 bg-black flex-shrink-0 overflow-hidden shadow-[4px_4px_0px_#000] cursor-pointer" onclick="triggerCharacterQuote()">
-            <!-- Native Image Element -->
-            <img id="avatar-img" src="19169_2.jpg" alt="黃玉翔" onerror="this.onerror=null; this.src='19169.jpg';" class="w-full h-full object-cover pixel-img transition-all duration-300">
-            <!-- Canvas Pixelated Overlay (Hidden by default until toggled) -->
-            <canvas id="pixel-avatar-canvas" class="w-full h-full object-cover hidden pixel-img"></canvas>
-            
-            <!-- Sunglasses Winner Overlay (Dynamic) -->
-            <div id="sunglasses-overlay" class="absolute top-3 left-0 right-0 text-center text-3xl hidden drop-shadow-[0_2px_0_#000]">
-              🕶️
-            </div>
-
-            <!-- Absent Badge Overlay (Dynamic) -->
-            <div id="absent-badge" class="absolute inset-0 bg-red-950/80 text-red-500 font-black text-xs flex flex-col items-center justify-center hidden border-2 border-red-500">
-              <i class="fas fa-times-circle text-2xl mb-1 animate-ping"></i>
-              <span>缺席確定</span>
-            </div>
-
-            <div class="absolute bottom-0 inset-x-0 bg-yellow-400/90 text-black text-[10px] text-center font-bold font-mono py-0.5">
-              LV. 99 出席術大師
-            </div>
-          </div>
-
-          <!-- Character Stats -->
-          <div class="space-y-1 text-left flex-grow">
-            <div class="flex justify-between items-start">
-              <h3 class="text-2xl font-bold text-yellow-400 glow-yellow-text">黃玉翔</h3>
-              <span class="text-xs bg-red-900/80 text-red-300 px-1.5 py-0.5 border border-red-500">BOSS</span>
-            </div>
-            <p class="text-xs text-slate-300 font-mono">市立武陵高中 ｜ NO. 310380</p>
-            
-            <!-- Morning HP Bar -->
-            <div class="space-y-0.5">
-              <div class="flex justify-between text-[11px] text-green-400 font-mono">
-                <span>AM 機率</span>
-                <span>46%</span>
-              </div>
-              <div class="w-full h-2.5 bg-black border border-green-500 p-0.5">
-                <div class="h-full bg-green-400 w-[46%]"></div>
-              </div>
-            </div>
-
-            <!-- Afternoon MP Bar -->
-            <div class="space-y-0.5">
-              <div class="flex justify-between text-[11px] text-yellow-400 font-mono">
-                <span>PM 機率</span>
-                <span>84%</span>
-              </div>
-              <div class="w-full h-2.5 bg-black border border-yellow-500 p-0.5">
-                <div class="h-full bg-yellow-400 w-[84%]"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Controls under avatar -->
-        <div class="flex justify-between items-center mt-3 pt-2 border-t border-yellow-500/30 text-xs">
-          <button onclick="togglePixelArtStyle()" id="pixel-toggle-btn" class="bg-black text-yellow-400 border border-yellow-400 px-2 py-0.5 hover:bg-yellow-400 hover:text-black font-bold">
-            <i class="fas fa-magic mr-1"></i>切換 8-BIT 像素照片
-          </button>
-          <label class="bg-black text-green-400 border border-green-400 px-2 py-0.5 hover:bg-green-400 hover:text-black font-bold cursor-pointer">
-            <i class="fas fa-upload mr-1"></i>換照片
-            <input type="file" id="photo-upload" accept="image/*" class="hidden" onchange="handlePhotoUpload(event)">
-          </label>
-        </div>
-      </div>
-
-      <!-- Mode Tabs (Arcade Buttons) -->
-      <div class="md:col-span-7 flex flex-col sm:flex-row gap-3">
-        <button id="tab-morning" onclick="switchMode('morning')" class="flex-1 py-3 px-2 pixel-btn bg-green-500 text-black font-black text-lg hover:bg-green-400 flex flex-col items-center justify-center">
-          <span>[ 上午盤 ]</span>
-          <span class="text-xs text-black font-bold">46% 機率</span>
-        </button>
-        <button id="tab-afternoon" onclick="switchMode('afternoon')" class="flex-1 py-3 px-2 pixel-btn bg-slate-800 text-slate-300 font-black text-lg hover:bg-slate-700 flex flex-col items-center justify-center">
-          <span>[ 下午盤 ]</span>
-          <span class="text-xs text-yellow-400 font-bold">84% 機率</span>
-        </button>
-        <button id="tab-both" onclick="switchMode('both')" class="flex-1 py-3 px-2 pixel-btn bg-slate-800 text-slate-300 font-black text-lg hover:bg-slate-700 flex flex-col items-center justify-center">
-          <span class="text-yellow-400">⚡ [ 一鍵雙抽 ]</span>
-          <span class="text-xs text-slate-400 font-bold">全日大考驗</span>
-        </button>
-      </div>
-
-    </div>
-
-    <!-- Game Main Stage -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-      
-      <!-- Left Column: Pixel Wheel Canvas & Arcade Controls -->
-      <div class="lg:col-span-7 flex flex-col items-center">
-        <div class="relative w-full max-w-[360px] sm:max-w-[400px] aspect-square flex items-center justify-center p-2 bg-black border-4 border-green-500 shadow-[8px_8px_0px_#000]">
-          
-          <!-- Pixel Pointer Needle -->
-          <div class="absolute top-1 left-1/2 -translate-x-1/2 z-20 w-8 h-10 filter drop-shadow-[2px_2px_0px_#000]">
-            <svg viewBox="0 0 40 50" class="w-full h-full">
-              <polygon points="20,50 2,2 38,2" fill="#FFCC00" stroke="#000" stroke-width="4" stroke-linejoin="miter"/>
-              <rect x="15" y="6" width="10" height="10" fill="#FFF"/>
-            </svg>
-          </div>
-
-          <!-- Fortune Wheel Canvas -->
-          <canvas id="wheelCanvas" width="800" height="800" class="w-full h-full cursor-pointer pixel-img"></canvas>
-
-          <!-- Confetti Canvas Overlay -->
-          <canvas id="confettiCanvas" class="absolute inset-0 w-full h-full pointer-events-none z-30"></canvas>
-        </div>
-
-        <!-- Spin Action Button (Arcade Push Button) -->
-        <div class="w-full max-w-xs mt-6">
-          <button id="spin-btn" onclick="startSpin()" class="w-full py-4 pixel-btn bg-yellow-400 text-black font-black text-2xl hover:bg-yellow-300 text-center tracking-widest glow-yellow-text">
-            <i class="fas fa-gamepad mr-2"></i>
-            <span id="spin-btn-text">START SPIN!</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Right Column: RPG Result Dialogue & Terminal Stats -->
-      <div class="lg:col-span-5 space-y-6">
+    <div class="main-layout">
         
-        <!-- RPG Dialogue Window -->
-        <div class="pixel-card-green p-5 relative">
-          <div class="flex justify-between items-center border-b-2 border-green-500/50 pb-2 mb-3">
-            <span class="text-xs text-green-400 font-mono tracking-widest flex items-center space-x-2">
-              <i class="fas fa-comment-dots text-yellow-400"></i>
-              <span>CHARACTER DIALOGUE</span>
-            </span>
-            <span class="text-[10px] text-green-600">SYS_OUT.LOG</span>
-          </div>
+        <!-- Left Panel: Profile & Schedule -->
+        <div class="left-panel">
+            <div class="pixel-box profile-card">
+                <div class="pixel-title">CHARACTER</div>
+                
+                <div class="avatar-container" onclick="speakRandomQuote()">
+                    <div class="speech-bubble" id="speechBubble">Timing對了就來！</div>
+                    <img src="19169_2.jpg" class="avatar-img" alt="黃玉翔" onerror="this.src='https://via.placeholder.com/140/000/fff?text=黃玉翔'">
+                </div>
 
-          <div id="result-display" class="min-h-[120px] flex flex-col justify-center">
-            <div class="text-center py-4 text-green-600 space-y-2">
-              <i class="fas fa-angle-double-right text-2xl animate-pulse"></i>
-              <p class="text-lg text-green-400">請按下 [START SPIN] 按鈕啟動轉盤！</p>
+                <div>
+                    <span class="badge-school">市立武陵高中 307班</span><br>
+                    <strong>黃玉翔</strong> <span style="color:var(--accent-gold);">LV.99</span>
+                </div>
+
+                <!-- Timetable Day Selector -->
+                <div style="margin-top:10px;">
+                    <span style="font-size:0.75rem; font-weight:bold; color:var(--accent-gold);">🗓️ 選擇星期課表：</span>
+                    <div class="day-buttons">
+                        <button class="btn-day" id="day-Mon" onclick="selectDay('Mon')">一</button>
+                        <button class="btn-day" id="day-Tue" onclick="selectDay('Tue')">二</button>
+                        <button class="btn-day" id="day-Wed" onclick="selectDay('Wed')">三</button>
+                        <button class="btn-day" id="day-Thu" onclick="selectDay('Thu')">四</button>
+                        <button class="btn-day" id="day-Fri" onclick="selectDay('Fri')">五</button>
+                    </div>
+                </div>
+
+                <div class="schedule-info" id="scheduleInfo">
+                    <!-- Dynamic schedule info loaded via JS -->
+                </div>
             </div>
-          </div>
-
-          <!-- Share Action -->
-          <div id="share-box" class="mt-4 pt-3 border-t-2 border-green-500/30 hidden">
-            <button onclick="copyResultText()" class="w-full py-2 px-3 bg-black text-yellow-400 border-2 border-yellow-400 hover:bg-yellow-400 hover:text-black font-bold text-sm transition flex items-center justify-center space-x-2">
-              <i class="fas fa-copy"></i>
-              <span>複製社群戰報 (LINE / Discord)</span>
-            </button>
-          </div>
         </div>
 
-        <!-- Arcade Stats Display -->
-        <div class="bg-black border-4 border-yellow-400 p-4 shadow-[6px_6px_0px_#000] grid grid-cols-2 gap-4 text-center">
-          <div class="border-r-2 border-yellow-400/40 pr-2">
-            <span class="text-xs text-yellow-400 block font-mono">TOTAL SPINS</span>
-            <span id="stat-total" class="text-3xl font-black text-white font-mono">0</span>
-          </div>
-          <div>
-            <span class="text-xs text-green-400 block font-mono">ATTEND RATE</span>
-            <span id="stat-rate" class="text-3xl font-black text-green-400 font-mono">0%</span>
-          </div>
+        <!-- Center Panel: Main Wheel -->
+        <div class="center-panel">
+            <div class="pixel-box wheel-section">
+                <div class="pixel-title" id="currentModeTitle">MODE: 🌅 上午模式</div>
+                
+                <div class="prob-badge" id="probDisplay">即時算出機率：--%</div>
+
+                <div class="wheel-wrapper">
+                    <div class="pointer"></div>
+                    <canvas id="wheelCanvas" width="300" height="300"></canvas>
+                    <div class="center-avatar-hub">
+                        <img src="19169_2.jpg" alt="黃玉翔" onerror="this.src='https://via.placeholder.com/65/000/fff?text=黃'">
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn-pixel btn-green" onclick="switchAndSpin('AM')">
+                        🌅 抽上午
+                    </button>
+                    <button class="btn-pixel btn-cyan" onclick="switchAndSpin('PM')">
+                        🌆 抽下午
+                    </button>
+                    <button class="btn-pixel btn-gold" onclick="spinFullDay()">
+                        ⚡ 全日雙考驗
+                    </button>
+                </div>
+
+                <div class="result-box" id="resultBox">
+                    <div style="color:var(--accent-gold); font-weight:bold; font-size:1rem;">READY TO SPIN!</div>
+                    <div style="font-size:0.8rem; color:#ccc; margin-top:4px;">結合 307 課表 + 遊戲更新 + 催來電</div>
+                </div>
+            </div>
+
+            <div class="pixel-box">
+                <div class="pixel-title">LOGS</div>
+                <div class="log-box" id="logBox">
+                    <div>[系統就緒] 載入武陵 307 班課表數據完成。</div>
+                </div>
+            </div>
         </div>
 
-        <!-- Recent History Log Terminal -->
-        <div class="bg-black border-4 border-green-500 p-4 shadow-[6px_6px_0px_#000] space-y-3">
-          <div class="flex justify-between items-center border-b border-green-800 pb-1">
-            <h3 class="text-xs font-bold text-green-400 uppercase tracking-wider flex items-center space-x-2">
-              <i class="fas fa-list text-yellow-400"></i>
-              <span>RECENT LOGS</span>
-            </h3>
-            <button onclick="clearHistory()" class="text-[11px] text-red-400 hover:underline">CLEAR</button>
-          </div>
-          <div id="history-list" class="space-y-1.5 max-h-40 overflow-y-auto pr-1 text-xs font-mono">
-            <p class="text-green-800 text-center py-2">&gt; NO DATA AVAILABLE</p>
-          </div>
+        <!-- Right Panel: Phone & Dynamic Events -->
+        <div class="right-panel">
+            
+            <!-- Phone Call Widget -->
+            <div class="phone-box">
+                <div style="font-size:0.8rem; font-weight:bold; color:var(--accent-purple);">☎️ 熱線急催</div>
+                <div style="font-size:0.75rem; color:#ddd; margin:4px 0;">「Timing很重要，快點來啦！」</div>
+                <button class="phone-btn" onclick="callHotline()">
+                    📞 撥打電話催人 (+15%)
+                </button>
+                <div class="phone-status" id="phoneStatus">通話狀態: 待命</div>
+            </div>
+
+            <!-- Dynamic Events -->
+            <div class="pixel-box">
+                <div class="pixel-title">EVENT MODS</div>
+                <div class="event-toggle-group">
+                    
+                    <div class="event-card" id="cardBA" onclick="toggleEvent('BA')">
+                        <div>
+                            <strong>😭 蔚藍檔案更新</strong><br>
+                            <span style="color:var(--accent-red); font-size:0.65rem;">出席率大降 (-25%)</span>
+                        </div>
+                        <input type="checkbox" id="chkBA" pointer-events="none">
+                    </div>
+
+                    <div class="event-card" id="cardBS" onclick="toggleEvent('BS')">
+                        <div>
+                            <strong>🌵 荒野亂鬥更新</strong><br>
+                            <span style="color:#ff9f1c; font-size:0.65rem;">出席率稍降 (-10%)</span>
+                        </div>
+                        <input type="checkbox" id="chkBS" pointer-events="none">
+                    </div>
+
+                    <button class="btn-pixel" style="font-size:0.65rem; width:100%; margin-top:4px;" onclick="randomizeEvents()">
+                        🎲 隨機突發事件
+                    </button>
+                </div>
+            </div>
+
         </div>
 
-      </div>
     </div>
 
-  </div>
+    <script>
+        // --- Web Audio Synth ---
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
 
-  <!-- Footer -->
-  <footer class="mt-12 text-center text-xs text-slate-600 font-mono">
-    <p>© 2026 HUANG YU-XIANG ATTENDANCE RESEARCH CENTER · 8-BIT ARCADE CLASSIC</p>
-  </footer>
-
-  <!-- Core JavaScript Engine -->
-  <script>
-    // --- Config & Probabilities ---
-    const CONFIG = {
-      morning: { name: '上午', prob: 0.46 },
-      afternoon: { name: '下午', prob: 0.84 }
-    };
-
-    // --- Image Loader for Huang Yu-Xiang Photo ---
-    const heroImageObj = new Image();
-    let heroImageLoaded = false;
-
-    heroImageObj.onload = function() {
-      heroImageLoaded = true;
-      drawWheel(currentWheelAngle, currentMode);
-      renderPixelatedCanvas();
-    };
-
-    // Load original picture 19169_2.jpg, fallback to 19169.jpg if missing
-    heroImageObj.onerror = function() {
-      if (heroImageObj.src.indexOf('19169_2.jpg') !== -1) {
-        heroImageObj.src = '19169.jpg';
-      }
-    };
-    heroImageObj.src = '19169_2.jpg';
-
-    // --- Random Quotes ---
-    const YUXIANG_QUOTES = [
-      "黃玉翔：「早上第一節課...那是給神仙玩的吧？」",
-      "黃玉翔：「下午只要沒下雨，我出現的機率高達 84%！」",
-      "黃玉翔：「武陵高中的地氣非常好，適合睡覺。」",
-      "黃玉翔：「今天會不會來？看轉盤怎麼說囉！」",
-      "黃玉翔：「別催了，我正在準備出門...（躺回床上）」"
-    ];
-
-    function triggerCharacterQuote() {
-      playTick();
-      const randomQuote = YUXIANG_QUOTES[Math.floor(Math.random() * YUXIANG_QUOTES.length)];
-      showToast(randomQuote);
-    }
-
-    // --- Photo Switcher & Pixel Filter ---
-    let isPixelatedMode = false;
-
-    function renderPixelatedCanvas() {
-      const pCanvas = document.getElementById('pixel-avatar-canvas');
-      const pCtx = pCanvas.getContext('2d');
-      pCanvas.width = 32;
-      pCanvas.height = 32;
-
-      pCtx.imageSmoothingEnabled = false;
-      pCtx.drawImage(heroImageObj, 0, 0, 32, 32);
-    }
-
-    function togglePixelArtStyle() {
-      playTick();
-      isPixelatedMode = !isPixelatedMode;
-      const avatarImg = document.getElementById('avatar-img');
-      const pCanvas = document.getElementById('pixel-avatar-canvas');
-      const btn = document.getElementById('pixel-toggle-btn');
-
-      if (isPixelatedMode) {
-        avatarImg.classList.add('hidden');
-        pCanvas.classList.remove('hidden');
-        btn.innerHTML = '<i class="fas fa-image mr-1"></i>切換高畫質照片';
-        showToast('已啟動 8-Bit 復古像素模式');
-      } else {
-        avatarImg.classList.remove('hidden');
-        pCanvas.classList.add('hidden');
-        btn.innerHTML = '<i class="fas fa-magic mr-1"></i>切換 8-BIT 像素照片';
-        showToast('已切換為原始照片');
-      }
-    }
-
-    function handlePhotoUpload(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        heroImageObj.src = e.target.result;
-        document.getElementById('avatar-img').src = e.target.result;
-        showToast('相片已成功更換！');
-      };
-      reader.readAsDataURL(file);
-    }
-
-    // --- Audio System (Web Audio API - 8-Bit Square Waves) ---
-    let soundEnabled = true;
-    let audioCtx = null;
-
-    function initAudio() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-    }
-
-    function playTick() {
-      if (!soundEnabled) return;
-      try {
-        initAudio();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'square';
-        osc.frequency.setValueAtTime(300, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.04);
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.04);
-      } catch (e) {}
-    }
-
-    function playWinSound() {
-      if (!soundEnabled) return;
-      try {
-        initAudio();
-        const notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99];
-        notes.forEach((freq, idx) => {
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-          osc.type = 'square';
-          osc.frequency.value = freq;
-          gain.gain.setValueAtTime(0, audioCtx.currentTime + idx * 0.08);
-          gain.gain.linearRampToValueAtTime(0.15, audioCtx.currentTime + idx * 0.08 + 0.01);
-          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + idx * 0.08 + 0.2);
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-          osc.start(audioCtx.currentTime + idx * 0.08);
-          osc.stop(audioCtx.currentTime + idx * 0.08 + 0.2);
-        });
-      } catch (e) {}
-    }
-
-    function playLoseSound() {
-      if (!soundEnabled) return;
-      try {
-        initAudio();
-        const notes = [400, 350, 300, 220];
-        notes.forEach((freq, idx) => {
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-          osc.type = 'sawtooth';
-          osc.frequency.value = freq;
-          gain.gain.setValueAtTime(0, audioCtx.currentTime + idx * 0.12);
-          gain.gain.linearRampToValueAtTime(0.15, audioCtx.currentTime + idx * 0.12 + 0.02);
-          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + idx * 0.12 + 0.25);
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-          osc.start(audioCtx.currentTime + idx * 0.12);
-          osc.stop(audioCtx.currentTime + idx * 0.12 + 0.25);
-        });
-      } catch (e) {}
-    }
-
-    document.getElementById('sound-toggle').addEventListener('click', () => {
-      soundEnabled = !soundEnabled;
-      const icon = document.getElementById('sound-icon');
-      const text = document.getElementById('sound-text');
-      if (soundEnabled) {
-        icon.className = 'fas fa-volume-up text-yellow-400';
-        text.innerText = 'SOUND: ON';
-        showToast('SOUND ENABLED');
-      } else {
-        icon.className = 'fas fa-volume-mute text-slate-500';
-        text.innerText = 'SOUND: OFF';
-        showToast('SOUND MUTED');
-      }
-    });
-
-    // --- Application State ---
-    let currentMode = 'morning'; 
-    let isSpinning = false;
-    let currentWheelAngle = 0; 
-    let historyLogs = [];
-    let lastResultSummary = '';
-
-    // --- Canvas Wheel Render Engine (Pixel Art Style) ---
-    const canvas = document.getElementById('wheelCanvas');
-    const ctx = canvas.getContext('2d');
-
-    function drawWheel(angleDeg, mode) {
-      ctx.imageSmoothingEnabled = false;
-      const activeProb = (mode === 'afternoon') ? CONFIG.afternoon.prob : CONFIG.morning.prob;
-
-      const width = canvas.width;
-      const height = canvas.height;
-      const cx = width / 2;
-      const cy = height / 2;
-      const radius = width / 2 - 24;
-
-      ctx.clearRect(0, 0, width, height);
-
-      // Rotate Wheel Sectors
-      ctx.save();
-      ctx.translate(cx, cy);
-      ctx.rotate((angleDeg * Math.PI) / 180);
-
-      const comeAngleRad = activeProb * 2 * Math.PI;
-
-      // Slice 1: "會來" (Emerald Green)
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.arc(0, 0, radius, 0, comeAngleRad);
-      ctx.closePath();
-      ctx.fillStyle = '#00FF66';
-      ctx.fill();
-      ctx.lineWidth = 10;
-      ctx.strokeStyle = '#000000';
-      ctx.stroke();
-
-      // Text 1
-      ctx.save();
-      const midAngle1 = comeAngleRad / 2;
-      ctx.rotate(midAngle1);
-      ctx.textAlign = 'right';
-      ctx.fillStyle = '#000000';
-      ctx.font = '900 48px "VT323", "Noto Sans TC", sans-serif';
-      ctx.fillText('★ 會來 (' + Math.round(activeProb * 100) + '%)', radius - 40, 15);
-      ctx.restore();
-
-      // Slice 2: "不來" (Crimson Red)
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.arc(0, 0, radius, comeAngleRad, 2 * Math.PI);
-      ctx.closePath();
-      ctx.fillStyle = '#FF0055';
-      ctx.fill();
-      ctx.lineWidth = 10;
-      ctx.strokeStyle = '#000000';
-      ctx.stroke();
-
-      // Text 2
-      ctx.save();
-      const midAngle2 = comeAngleRad + (2 * Math.PI - comeAngleRad) / 2;
-      ctx.rotate(midAngle2);
-      ctx.textAlign = 'right';
-      ctx.fillStyle = '#FFFFFF';
-      ctx.font = '900 48px "VT323", "Noto Sans TC", sans-serif';
-      ctx.fillText('✖ 不來 (' + Math.round((1 - activeProb) * 100) + '%)', radius - 40, 15);
-      ctx.restore();
-
-      // Outer Gear Border
-      ctx.restore(); 
-      ctx.beginPath();
-      ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
-      ctx.lineWidth = 20;
-      ctx.strokeStyle = '#FFCC00';
-      ctx.stroke();
-
-      // Pixel Studs
-      const numDots = 16;
-      for (let i = 0; i < numDots; i++) {
-        const dotAngle = (i * (360 / numDots) * Math.PI) / 180;
-        const dx = cx + radius * Math.cos(dotAngle);
-        const dy = cy + radius * Math.sin(dotAngle);
-        ctx.fillStyle = (i % 2 === 0) ? '#FFFFFF' : '#000000';
-        ctx.fillRect(dx - 8, dy - 8, 16, 16);
-      }
-
-      // --- CENTER HUB WITH HUANG YU-XIANG PHOTO ---
-      const hubRadius = 85;
-
-      // Outer Gold Hub Ring
-      ctx.beginPath();
-      ctx.arc(cx, cy, hubRadius + 6, 0, 2 * Math.PI);
-      ctx.fillStyle = '#000000';
-      ctx.fill();
-      ctx.lineWidth = 8;
-      ctx.strokeStyle = '#FFCC00';
-      ctx.stroke();
-
-      // Clip Circle for Photo
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(cx, cy, hubRadius, 0, 2 * Math.PI);
-      ctx.clip();
-
-      if (heroImageLoaded) {
-        // Draw photo centered
-        const imgSize = hubRadius * 2;
-        ctx.drawImage(heroImageObj, cx - hubRadius, cy - hubRadius, imgSize, imgSize);
-      } else {
-        ctx.fillStyle = '#111';
-        ctx.fillRect(cx - hubRadius, cy - hubRadius, hubRadius * 2, hubRadius * 2);
-      }
-      ctx.restore();
-
-      // Hub Title Overlay Badge
-      ctx.fillStyle = 'rgba(0,0,0,0.75)';
-      ctx.fillRect(cx - 70, cy + hubRadius - 32, 140, 28);
-      ctx.textAlign = 'center';
-      ctx.fillStyle = '#FFCC00';
-      ctx.font = '900 22px "VT323", sans-serif';
-      ctx.fillText('黃玉翔', cx, cy + hubRadius - 12);
-    }
-
-    // --- Mode Switching ---
-    function switchMode(mode) {
-      if (isSpinning) return;
-      playTick();
-      currentMode = mode;
-
-      const btnM = document.getElementById('tab-morning');
-      const btnA = document.getElementById('tab-afternoon');
-      const btnB = document.getElementById('tab-both');
-      const spinBtnText = document.getElementById('spin-btn-text');
-
-      [btnM, btnA, btnB].forEach(b => {
-        b.className = 'flex-1 py-3 px-2 pixel-btn bg-slate-800 text-slate-300 font-black text-lg hover:bg-slate-700 flex flex-col items-center justify-center';
-      });
-
-      if (mode === 'morning') {
-        btnM.className = 'flex-1 py-3 px-2 pixel-btn bg-green-500 text-black font-black text-lg flex flex-col items-center justify-center';
-        spinBtnText.innerText = 'SPIN AM (46%)';
-        drawWheel(currentWheelAngle, 'morning');
-      } else if (mode === 'afternoon') {
-        btnA.className = 'flex-1 py-3 px-2 pixel-btn bg-yellow-400 text-black font-black text-lg flex flex-col items-center justify-center';
-        spinBtnText.innerText = 'SPIN PM (84%)';
-        drawWheel(currentWheelAngle, 'afternoon');
-      } else {
-        btnB.className = 'flex-1 py-3 px-2 pixel-btn bg-red-600 text-white font-black text-lg flex flex-col items-center justify-center';
-        spinBtnText.innerText = 'DOUBLE SPIN ⚡';
-        drawWheel(currentWheelAngle, 'morning');
-      }
-    }
-
-    // --- Spinning Animation Core ---
-    function animateSpinToOutcome(targetMode) {
-      return new Promise((resolve) => {
-        initAudio();
-        const prob = CONFIG[targetMode].prob;
-        const isComing = Math.random() < prob;
-
-        const comeAngleDeg = prob * 360;
-        let minA, maxA;
-
-        if (isComing) {
-          minA = 5;
-          maxA = comeAngleDeg - 5;
-        } else {
-          minA = comeAngleDeg + 5;
-          maxA = 355;
+        function initAudio() {
+            if (!audioCtx) audioCtx = new AudioContext();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
         }
 
-        const targetSliceAngle = minA + Math.random() * (maxA - minA);
-        const desiredMod = ((270 - targetSliceAngle) % 360 + 360) % 360;
-
-        const extraRounds = 5 + Math.floor(Math.random() * 3);
-        const currentMod = ((currentWheelAngle % 360) + 360) % 360;
-        let delta = desiredMod - currentMod;
-        if (delta <= 0) delta += 360;
-
-        const startAngle = currentWheelAngle;
-        const finalAngle = startAngle + extraRounds * 360 + delta;
-
-        const duration = 4000;
-        const startTime = performance.now();
-        let lastTickAngle = startAngle;
-
-        function step(now) {
-          const elapsed = now - startTime;
-          const progress = Math.min(elapsed / duration, 1);
-          const easeProgress = 1 - Math.pow(1 - progress, 3);
-          currentWheelAngle = startAngle + (finalAngle - startAngle) * easeProgress;
-
-          if (currentWheelAngle - lastTickAngle >= 22) {
-            playTick();
-            lastTickAngle = currentWheelAngle;
-          }
-
-          drawWheel(currentWheelAngle, targetMode);
-
-          if (progress < 1) {
-            requestAnimationFrame(step);
-          } else {
-            currentWheelAngle = finalAngle;
-            drawWheel(currentWheelAngle, targetMode);
-            resolve({ isComing, mode: targetMode });
-          }
+        function playBeep(freq, duration, type = 'square') {
+            try {
+                initAudio();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e){}
         }
 
-        requestAnimationFrame(step);
-      });
-    }
-
-    // --- Spin Button Trigger ---
-    async function startSpin() {
-      if (isSpinning) return;
-      isSpinning = true;
-      const spinBtn = document.getElementById('spin-btn');
-      spinBtn.disabled = true;
-      spinBtn.classList.add('opacity-50', 'cursor-not-allowed');
-
-      // Reset Avatar Reaction
-      resetAvatarReaction();
-
-      if (currentMode === 'both') {
-        showToast('正在抽取「上午」狀態...');
-        drawWheel(currentWheelAngle, 'morning');
-        const mRes = await animateSpinToOutcome('morning');
-        
-        await new Promise(r => setTimeout(r, 600));
-
-        showToast('接下來抽取「下午」狀態...');
-        drawWheel(currentWheelAngle, 'afternoon');
-        const aRes = await animateSpinToOutcome('afternoon');
-
-        handleSpinResults({ morning: mRes.isComing, afternoon: aRes.isComing });
-      } else {
-        const res = await animateSpinToOutcome(currentMode);
-        const outcome = { morning: null, afternoon: null };
-        outcome[currentMode] = res.isComing;
-        handleSpinResults(outcome);
-      }
-
-      isSpinning = false;
-      spinBtn.disabled = false;
-      spinBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-    }
-
-    function resetAvatarReaction() {
-      const avatarImg = document.getElementById('avatar-img');
-      const sunglasses = document.getElementById('sunglasses-overlay');
-      const absentBadge = document.getElementById('absent-badge');
-
-      avatarImg.className = 'w-full h-full object-cover pixel-img transition-all duration-300';
-      sunglasses.classList.add('hidden');
-      absentBadge.classList.add('hidden');
-    }
-
-    // --- Result Handling & RPG Commentary ---
-    function handleSpinResults(res) {
-      const display = document.getElementById('result-display');
-      const shareBox = document.getElementById('share-box');
-      const avatarImg = document.getElementById('avatar-img');
-      const sunglasses = document.getElementById('sunglasses-overlay');
-      const absentBadge = document.getElementById('absent-badge');
-
-      shareBox.classList.remove('hidden');
-
-      let commentary = '';
-      let badgeHtml = '';
-      let isSuccess = false;
-
-      if (res.morning !== null && res.afternoon !== null) {
-        const mStr = res.morning ? '<span class="text-green-400 font-bold">[AM: 會來]</span>' : '<span class="text-red-500 font-bold">[AM: 不來]</span>';
-        const aStr = res.afternoon ? '<span class="text-green-400 font-bold">[PM: 會來]</span>' : '<span class="text-red-500 font-bold">[PM: 不來]</span>';
-
-        badgeHtml = `<div class="text-xl font-bold flex justify-center space-x-2 font-mono">${mStr} ${aStr}</div>`;
-
-        if (res.morning && res.afternoon) {
-          commentary = "🎉 奇蹟達成！黃玉翔今日全勤！觸發 SSR 級隱藏成就「武陵全勤神人」！";
-          isSuccess = true;
-        } else if (!res.morning && res.afternoon) {
-          commentary = "⏰ 典型作息！早上進入睡過頭模式，下午神清氣爽準時於武陵報到！";
-          isSuccess = true;
-        } else if (res.morning && !res.afternoon) {
-          commentary = "🏃 早退大師！早上露個臉簽到，下午直接進入隱身狀態！";
-        } else {
-          commentary = "💤 雙休隱者！今天玉翔全天不在線上，棉被結界太過強大！";
+        function playPhoneRing() {
+            try {
+                initAudio();
+                // Ringing tone
+                playBeep(440, 0.2, 'sine');
+                setTimeout(() => playBeep(480, 0.2, 'sine'), 100);
+                setTimeout(() => playBeep(440, 0.4, 'sine'), 300);
+            } catch(e){}
         }
 
-        lastResultSummary = `【黃玉翔會不會來？戰報】\n☀️ 上午：${res.morning ? '會來 🎉' : '不來 💤'}\n🌙 下午：${res.afternoon ? '會來 🎉' : '不來 💤'}\n💬 評語：${commentary}`;
-        addHistoryLog(`雙抽: AM${res.morning?'會':'否'} / PM${res.afternoon?'會':'否'}`, res.morning || res.afternoon);
-
-      } else {
-        const isMorning = res.morning !== null;
-        const targetText = isMorning ? '上午' : '下午';
-        const outcome = isMorning ? res.morning : res.afternoon;
-
-        badgeHtml = `<div class="text-3xl font-black ${outcome ? 'text-green-400 glow-green-text' : 'text-red-500 glow-red-text'} font-mono">${targetText}抽籤：${outcome ? '★ 會來！' : '✖ 不來！'}</div>`;
-
-        if (outcome) {
-          commentary = isMorning ? "☀️ 上午抽到會來 (46% 難度)！黃玉翔展現了驚人的早起意志力！" : "🌙 下午抽中會來 (84% 高機率)！這完全符合玉翔的經典規律！";
-          isSuccess = true;
-        } else {
-          commentary = isMorning ? "💤 上午不來 (54% 機率)！果然早上的棉被具有毀滅級吸引力。" : "😱 居然抽中了下午不來 (僅 16% 罕見機率)！觸發了極稀有缺席事件！";
+        function playWinFanfare() {
+            const notes = [261, 329, 392, 523, 659, 783, 1046];
+            notes.forEach((freq, i) => setTimeout(() => playBeep(freq, 0.12, 'triangle'), i * 70));
         }
 
-        lastResultSummary = `【黃玉翔會不會來？戰報】${targetText}抽籤：${outcome ? '會來 🎉' : '不來 💤'}\n💬 評語：${commentary}`;
-        addHistoryLog(`${targetText}: ${outcome ? '會來 🎉' : '不來 💤'}`, outcome);
-      }
-
-      // Avatar Photo Reaction
-      if (isSuccess) {
-        avatarImg.classList.add('avatar-win');
-        sunglasses.classList.remove('hidden');
-        playWinSound();
-        triggerPixelConfetti();
-      } else {
-        avatarImg.classList.add('avatar-lose');
-        absentBadge.classList.remove('hidden');
-        playLoseSound();
-      }
-
-      display.innerHTML = `
-        <div class="text-center space-y-3">
-          ${badgeHtml}
-          <p class="text-base text-yellow-300 bg-black/80 p-3 border-2 border-green-500 leading-relaxed font-mono">${commentary}</p>
-        </div>
-      `;
-    }
-
-    // --- 8-Bit Pixel Block Confetti System ---
-    function triggerPixelConfetti() {
-      const cCanvas = document.getElementById('confettiCanvas');
-      const cCtx = cCanvas.getContext('2d');
-      cCanvas.width = cCanvas.clientWidth;
-      cCanvas.height = cCanvas.clientHeight;
-
-      const particles = [];
-      const colors = ['#00FF66', '#FFCC00', '#FF0055', '#00FFFF', '#FFFFFF'];
-
-      for (let i = 0; i < 60; i++) {
-        particles.push({
-          x: cCanvas.width / 2,
-          y: cCanvas.height / 2,
-          vx: (Math.random() - 0.5) * 14,
-          vy: (Math.random() - 0.7) * 14,
-          size: Math.floor(Math.random() * 8) + 6,
-          color: colors[Math.floor(Math.random() * colors.length)],
-          life: 1.0
-        });
-      }
-
-      function renderConfetti() {
-        cCtx.clearRect(0, 0, cCanvas.width, cCanvas.height);
-        let active = false;
-
-        particles.forEach(p => {
-          if (p.life > 0) {
-            active = true;
-            p.x += p.vx;
-            p.y += p.vy;
-            p.vy += 0.3; 
-            p.life -= 0.02;
-
-            cCtx.fillStyle = p.color;
-            cCtx.globalAlpha = Math.max(0, p.life);
-            cCtx.fillRect(p.x, p.y, p.size, p.size);
-          }
-        });
-
-        if (active) {
-          requestAnimationFrame(renderConfetti);
-        } else {
-          cCtx.clearRect(0, 0, cCanvas.width, cCanvas.height);
+        function playFailSound() {
+            const notes = [300, 250, 200, 150];
+            notes.forEach((freq, i) => setTimeout(() => playBeep(freq, 0.18, 'sawtooth'), i * 90));
         }
-      }
 
-      renderConfetti();
-    }
+        // --- 307 Timetable Data ---
+        // Main core subjects (主科) causes probability penalty
+        const timetable = {
+            Mon: {
+                name: '星期一',
+                am: [
+                    { name: '體育', main: false },
+                    { name: '補強-生物', main: true },
+                    { name: '選修物理-波動', main: true },
+                    { name: '選修物理-波動', main: true }
+                ],
+                pm: [
+                    { name: '數學甲', main: true },
+                    { name: '數學甲', main: true },
+                    { name: '英語文', main: true },
+                    { name: '英文輔', main: true }
+                ]
+            },
+            Tue: {
+                name: '星期二',
+                am: [
+                    { name: '國語文', main: true },
+                    { name: '國語文', main: true },
+                    { name: '藝術生活', main: false },
+                    { name: '全民國防教育', main: false }
+                ],
+                pm: [
+                    { name: '補強-生物', main: true },
+                    { name: '數學甲', main: true },
+                    { name: '選修化學-反應', main: true },
+                    { name: '化學輔', main: true }
+                ]
+            },
+            Wed: {
+                name: '星期三',
+                am: [
+                    { name: '高三彈性學習一', main: false },
+                    { name: '國語文', main: true },
+                    { name: '英文作文', main: true },
+                    { name: '體育', main: false }
+                ],
+                pm: [
+                    { name: '多元選修', main: false },
+                    { name: '多元選修', main: false },
+                    { name: '音樂', main: false },
+                    { name: '數學輔', main: true }
+                ]
+            },
+            Thu: {
+                name: '星期四',
+                am: [
+                    { name: '選修生物-細胞', main: true },
+                    { name: '音樂', main: false },
+                    { name: '選修化學-反應', main: true },
+                    { name: '選修化學-反應', main: true }
+                ],
+                pm: [
+                    { name: '高三彈性學習三', main: false },
+                    { name: '英文作文', main: true },
+                    { name: '國語文', main: true },
+                    { name: '國文輔', main: true }
+                ]
+            },
+            Fri: {
+                name: '星期五',
+                am: [
+                    { name: '數學甲', main: true },
+                    { name: '選修生物-細胞', main: true },
+                    { name: '團體活動時間', main: false },
+                    { name: '團體活動時間', main: false }
+                ],
+                pm: [
+                    { name: '高三彈性學習二', main: false },
+                    { name: '英語文', main: true },
+                    { name: '選修物理-電磁', main: true },
+                    { name: '物理輔', main: true }
+                ]
+            }
+        };
 
-    // --- History & Stats Terminal System ---
-    function addHistoryLog(label, isComing) {
-      const timeStr = new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-      historyLogs.unshift({ label, isComing, timeStr });
-      if (historyLogs.length > 15) historyLogs.pop();
-      updateHistoryUI();
-    }
+        // --- State Variables ---
+        let currentDay = 'Mon';
+        let currentMode = 'AM'; // 'AM' or 'PM'
+        let eventBA = false;    // Blue Archive Maintenance (-25%)
+        let eventBS = false;    // Brawl Stars Maintenance (-10%)
+        let phoneBuffActive = false; // Telephone Hotline Call (+15%)
+        let isSpinning = false;
+        let currentAngle = 0;
 
-    function updateHistoryUI() {
-      const listEl = document.getElementById('history-list');
-      const statTotal = document.getElementById('stat-total');
-      const statRate = document.getElementById('stat-rate');
+        // Auto select current day of week (if weekday)
+        const dayIdx = new Date().getDay(); // 0:Sun, 1:Mon ... 5:Fri
+        const dayKeys = ['Mon', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Mon'];
+        currentDay = dayKeys[dayIdx];
 
-      if (historyLogs.length === 0) {
-        listEl.innerHTML = '<p class="text-green-800 text-center py-2">&gt; NO DATA AVAILABLE</p>';
-        statTotal.innerText = '0';
-        statRate.innerText = '0%';
-        return;
-      }
+        function selectDay(day) {
+            if (isSpinning) return;
+            currentDay = day;
+            document.querySelectorAll('.btn-day').forEach(b => b.classList.remove('active'));
+            document.getElementById('day-' + day).classList.add('active');
+            updateUI();
+            addLog(`切換至 307 課表：${timetable[day].name}`);
+        }
 
-      let comingCount = 0;
-      listEl.innerHTML = historyLogs.map(item => {
-        if (item.isComing) comingCount++;
-        return `
-          <div class="flex justify-between items-center bg-green-950/40 px-2 py-1 border border-green-800/50">
-            <span class="${item.isComing ? 'text-green-400' : 'text-red-400'}">&gt; ${item.label}</span>
-            <span class="text-[10px] text-slate-500">${item.timeStr}</span>
-          </div>
-        `;
-      }).join('');
+        function toggleEvent(evt) {
+            if (isSpinning) return;
+            if (evt === 'BA') {
+                eventBA = !eventBA;
+                document.getElementById('chkBA').checked = eventBA;
+                document.getElementById('cardBA').classList.toggle('active', eventBA);
+            } else if (evt === 'BS') {
+                eventBS = !eventBS;
+                document.getElementById('chkBS').checked = eventBS;
+                document.getElementById('cardBS').classList.toggle('active', eventBS);
+            }
+            updateUI();
+        }
 
-      statTotal.innerText = historyLogs.length;
-      const rate = Math.round((comingCount / historyLogs.length) * 100);
-      statRate.innerText = rate + '%';
-    }
+        function randomizeEvents() {
+            if (isSpinning) return;
+            eventBA = Math.random() < 0.35;
+            eventBS = Math.random() < 0.45;
+            document.getElementById('chkBA').checked = eventBA;
+            document.getElementById('cardBA').classList.toggle('active', eventBA);
+            document.getElementById('chkBS').checked = eventBS;
+            document.getElementById('cardBS').classList.toggle('active', eventBS);
+            playBeep(523, 0.1);
+            updateUI();
+            addLog(`🎲 隨機突發事件算牌完成`);
+        }
 
-    function clearHistory() {
-      playTick();
-      historyLogs = [];
-      updateHistoryUI();
-      showToast('LOGS CLEARED');
-    }
+        function callHotline() {
+            if (isSpinning) return;
+            playPhoneRing();
+            
+            const status = document.getElementById('phoneStatus');
+            status.innerHTML = `<span style="color:var(--accent-gold);">📞 通話中...「Timing很重要，快點來啦！」</span>`;
+            
+            setTimeout(() => {
+                phoneBuffActive = true;
+                status.innerHTML = `<span style="color:var(--accent-green);">✅ 熱線成功！出席率 +15% BUFF！</span>`;
+                
+                const bubble = document.getElementById('speechBubble');
+                bubble.innerText = "好啦好啦！Timing對了，馬上出發！";
+                bubble.classList.add('show');
+                setTimeout(() => bubble.classList.remove('show'), 2500);
 
-    // --- Copy to Clipboard ---
-    function copyResultText() {
-      if (!lastResultSummary) return;
+                updateUI();
+                addLog(`☎️ 打電話催人：觸發「Timing對了」BUFF (+15%)`);
+            }, 800);
+        }
 
-      const textarea = document.createElement('textarea');
-      textarea.value = lastResultSummary + `\n👉 立即挑戰：${window.location.href}`;
-      document.body.appendChild(textarea);
-      textarea.select();
-      try {
-        document.execCommand('copy');
-        showToast('戰報已複製至剪貼簿！');
-      } catch (err) {
-        showToast('複製失敗');
-      }
-      document.body.removeChild(textarea);
-    }
+        function calculateProbability(mode, dayKey) {
+            // Base Probabilities
+            let prob = mode === 'AM' ? 0.46 : 0.84;
 
-    // --- Toast UI Helper ---
-    function showToast(msg) {
-      const toast = document.getElementById('toast');
-      const toastMsg = document.getElementById('toast-message');
-      toastMsg.innerText = msg;
+            // 1. Timetable Main Subject Penalty (-5% per main subject)
+            const dayData = timetable[dayKey];
+            const subjects = mode === 'AM' ? dayData.am : dayData.pm;
+            const mainCount = subjects.filter(s => s.main).length;
+            const subjectPenalty = mainCount * 0.05;
+            prob -= subjectPenalty;
 
-      toast.classList.remove('translate-y-[-100px]', 'opacity-0');
-      toast.classList.add('translate-y-0', 'opacity-100');
+            // 2. Event Modifiers
+            if (eventBA) prob -= 0.25; // Blue Archive update
+            if (eventBS) prob -= 0.10; // Brawl Stars update
 
-      setTimeout(() => {
-        toast.classList.remove('translate-y-0', 'opacity-100');
-        toast.classList.add('translate-y-[-100px]', 'opacity-0');
-      }, 2500);
-    }
+            // 3. Telephone Hotline Buff
+            if (phoneBuffActive) prob += 0.15;
 
-    // --- Initial Load ---
-    window.onload = function() {
-      drawWheel(0, 'morning');
-    };
-  </script>
+            // Clamp between 5% and 95%
+            return Math.min(Math.max(prob, 0.05), 0.95);
+        }
+
+        function updateUI() {
+            const dayData = timetable[currentDay];
+            
+            // Render Left Panel Schedule Info
+            let amHTML = dayData.am.map(s => `<span class="subject-tag ${s.main?'tag-main':'tag-easy'}">${s.name}</span>`).join('');
+            let pmHTML = dayData.pm.map(s => `<span class="subject-tag ${s.main?'tag-main':'tag-easy'}">${s.name}</span>`).join('');
+            
+            const amMainCount = dayData.am.filter(s => s.main).length;
+            const pmMainCount = dayData.pm.filter(s => s.main).length;
+
+            document.getElementById('scheduleInfo').innerHTML = `
+                <strong style="color:var(--accent-gold);">${dayData.name} 課表概況：</strong><br>
+                🌅 上午 (主科:${amMainCount}): ${amHTML}<br>
+                🌆 下午 (主科:${pmMainCount}): ${pmHTML}<br>
+                <span style="color:#aaa; font-size:0.68rem;">* 每門主科將使該時段出席率 -5%</span>
+            `;
+
+            // Calculate current active probability
+            const currentProb = calculateProbability(currentMode, currentDay);
+            const percentStr = Math.round(currentProb * 100) + '%';
+            
+            document.getElementById('probDisplay').innerText = `即時算出出席機率：${percentStr}`;
+            document.getElementById('currentModeTitle').innerText = `MODE: ${currentMode === 'AM' ? '🌅 上午模式' : '🌆 下午模式'} (${timetable[currentDay].name})`;
+
+            drawWheel(currentProb);
+        }
+
+        // --- Canvas Wheel Drawing ---
+        const canvas = document.getElementById('wheelCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function drawWheel(probYes, rotationAngle = currentAngle) {
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            const radius = canvas.width / 2 - 10;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const angleYes = probYes * 2 * Math.PI;
+            const angleNo = (1 - probYes) * 2 * Math.PI;
+
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.rotate(rotationAngle);
+
+            // YES Sector (Green)
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.arc(0, 0, radius, 0, angleYes);
+            ctx.closePath();
+            ctx.fillStyle = '#00ff88';
+            ctx.fill();
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = '#000';
+            ctx.stroke();
+
+            // Text YES
+            ctx.save();
+            ctx.rotate(angleYes / 2);
+            ctx.fillStyle = '#000';
+            ctx.font = '900 16px "Press Start 2P", "Noto Sans TC"';
+            ctx.textAlign = 'right';
+            ctx.fillText('會來 ' + Math.round(probYes * 100) + '%', radius - 20, 5);
+            ctx.restore();
+
+            // NO Sector (Red)
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.arc(0, 0, radius, angleYes, angleYes + angleNo);
+            ctx.closePath();
+            ctx.fillStyle = '#ff2a6d';
+            ctx.fill();
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = '#000';
+            ctx.stroke();
+
+            // Text NO
+            ctx.save();
+            ctx.rotate(angleYes + angleNo / 2);
+            ctx.fillStyle = '#fff';
+            ctx.font = '900 16px "Press Start 2P", "Noto Sans TC"';
+            ctx.textAlign = 'right';
+            ctx.fillText('不來 ' + Math.round((1 - probYes) * 100) + '%', radius - 20, 5);
+            ctx.restore();
+
+            // Rim Dots
+            for (let i = 0; i < 16; i++) {
+                const dotAngle = (i / 16) * Math.PI * 2;
+                const dx = Math.cos(dotAngle) * (radius - 5);
+                const dy = Math.sin(dotAngle) * (radius - 5);
+                ctx.beginPath();
+                ctx.arc(dx, dy, 3.5, 0, Math.PI * 2);
+                ctx.fillStyle = i % 2 === 0 ? '#ffcc00' : '#ffffff';
+                ctx.fill();
+            }
+
+            ctx.restore();
+        }
+
+        function switchAndSpin(mode) {
+            if (isSpinning) return;
+            currentMode = mode;
+            updateUI();
+            spinWheel();
+        }
+
+        function spinWheel(onComplete = null) {
+            if (isSpinning) return;
+            isSpinning = true;
+
+            const probYes = calculateProbability(currentMode, currentDay);
+            const isYes = Math.random() < probYes;
+
+            const angleYes = probYes * 2 * Math.PI;
+            const angleNo = (1 - probYes) * 2 * Math.PI;
+
+            let targetSectorAngle;
+            if (isYes) {
+                const margin = 0.08;
+                targetSectorAngle = margin + Math.random() * (angleYes - 2 * margin);
+            } else {
+                const margin = 0.08;
+                targetSectorAngle = angleYes + margin + Math.random() * (angleNo - 2 * margin);
+            }
+
+            const extraRounds = (5 + Math.floor(Math.random() * 3)) * 2 * Math.PI;
+            const finalAngle = extraRounds + (1.5 * Math.PI - targetSectorAngle);
+
+            const duration = 3200;
+            const startTime = performance.now();
+            const startAngle = currentAngle % (2 * Math.PI);
+            let lastTick = startAngle;
+
+            function animate(now) {
+                const elapsed = now - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+
+                currentAngle = startAngle + (finalAngle - startAngle) * easeOut;
+                drawWheel(probYes, currentAngle);
+
+                if (Math.abs(currentAngle - lastTick) > 0.3) {
+                    playBeep(320 + (1 - progress) * 350, 0.02, 'square');
+                    lastTick = currentAngle;
+                }
+
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    isSpinning = false;
+                    
+                    // Consume phone buff after spin
+                    if (phoneBuffActive) {
+                        phoneBuffActive = false;
+                        document.getElementById('phoneStatus').innerText = "待命 (電話BUFF已使用)";
+                    }
+
+                    handleResult(isYes, probYes);
+                    if (onComplete) onComplete(isYes);
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        function handleResult(isYes, probYes) {
+            const resBox = document.getElementById('resultBox');
+            const modeText = currentMode === 'AM' ? '上午' : '下午';
+            const dayName = timetable[currentDay].name;
+            const percentStr = Math.round(probYes * 100) + '%';
+
+            if (isYes) {
+                playWinFanfare();
+                triggerConfetti();
+                resBox.innerHTML = `
+                    <div style="color:var(--accent-green); font-size:1.1rem; font-weight:bold;">🎉 【${dayName} ${modeText}】黃玉翔 會來！</div>
+                    <div style="font-size:0.8rem; color:#ddd; margin-top:4px;">算出機率 ${percentStr}，擊破萬難成功出席！</div>
+                `;
+                addLog(`${dayName}${modeText}: <span class="tag-yes">【會來】</span> (極限機率: ${percentStr})`);
+            } else {
+                playFailSound();
+                resBox.innerHTML = `
+                    <div style="color:var(--accent-red); font-size:1.1rem; font-weight:bold;">✖ 【${dayName} ${modeText}】黃玉翔 不會來！</div>
+                    <div style="font-size:0.8rem; color:#ddd; margin-top:4px;">算出機率 ${percentStr}，沉睡於床鋪不可抗力...</div>
+                `;
+                addLog(`${dayName}${modeText}: <span class="tag-no">【不來】</span> (機率: ${percentStr})`);
+            }
+            updateUI();
+        }
+
+        function spinFullDay() {
+            if (isSpinning) return;
+            const resBox = document.getElementById('resultBox');
+            resBox.innerHTML = `<div style="color:var(--accent-gold); font-size:1rem; font-weight:bold;">⚡ 進行 ${timetable[currentDay].name} 全日雙考驗...</div>`;
+
+            currentMode = 'AM';
+            updateUI();
+            
+            spinWheel((amYes) => {
+                setTimeout(() => {
+                    currentMode = 'PM';
+                    updateUI();
+                    spinWheel((pmYes) => {
+                        let comment = "";
+                        if (amYes && pmYes) comment = "👑 完美全勤！主科與誘惑全擋下了！";
+                        else if (!amYes && pmYes) comment = "⏰ 上午主科缺席，下午精準歸隊！";
+                        else if (amYes && !pmYes) comment = "🏃 上午看完快閃，下午提早消失！";
+                        else comment = "💤 遊戲+課表重創！整天人間蒸發！";
+
+                        resBox.innerHTML = `
+                            <div style="color:var(--accent-gold); font-size:1rem; font-weight:bold;">⚡ ${timetable[currentDay].name} 雙考驗結果：</div>
+                            <div style="font-size:0.85rem; color:#fff; margin-top:4px;">
+                                上午: ${amYes ? '<span class="tag-yes">會來</span>' : '<span class="tag-no">不來</span>'} | 
+                                下午: ${pmYes ? '<span class="tag-yes">會來</span>' : '<span class="tag-no">不來</span>'}<br>
+                                <strong>評語：${comment}</strong>
+                            </div>
+                        `;
+                    });
+                }, 1000);
+            });
+        }
+
+        function speakRandomQuote() {
+            playBeep(440, 0.08);
+            const quotes = [
+                "Timing真的很重要好嗎！",
+                "這堂有物理/化學/數甲？那我考慮一下...",
+                "蔚藍檔案更新？那我必須先清理體力！",
+                "荒野亂鬥開新賽季了啦！",
+                "武陵307號出席大考驗！",
+                "電話響了？我這就出門！"
+            ];
+            const bubble = document.getElementById('speechBubble');
+            bubble.innerText = quotes[Math.floor(Math.random() * quotes.length)];
+            bubble.classList.add('show');
+            setTimeout(() => bubble.classList.remove('show'), 2200);
+        }
+
+        function addLog(msg) {
+            const box = document.getElementById('logBox');
+            const time = new Date().toLocaleTimeString('zh-TW', { hour12: false });
+            box.innerHTML = `<div>[${time}] ${msg}</div>` + box.innerHTML;
+        }
+
+        function triggerConfetti() {
+            const confCanvas = document.getElementById('confettiCanvas');
+            const cctx = confCanvas.getContext('2d');
+            confCanvas.width = window.innerWidth;
+            confCanvas.height = window.innerHeight;
+
+            const particles = [];
+            const colors = ['#00ff88', '#ff2a6d', '#ffcc00', '#05d9e8', '#ffffff'];
+
+            for (let i = 0; i < 50; i++) {
+                particles.push({
+                    x: window.innerWidth / 2,
+                    y: window.innerHeight / 2,
+                    vx: (Math.random() - 0.5) * 14,
+                    vy: (Math.random() - 0.8) * 14,
+                    size: Math.random() * 8 + 4,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    life: 1
+                });
+            }
+
+            function render() {
+                cctx.clearRect(0, 0, confCanvas.width, confCanvas.height);
+                let alive = false;
+                particles.forEach(p => {
+                    if (p.life > 0) {
+                        alive = true;
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        p.vy += 0.4;
+                        p.life -= 0.02;
+                        cctx.fillStyle = p.color;
+                        cctx.fillRect(p.x, p.y, p.size, p.size);
+                    }
+                });
+                if (alive) requestAnimationFrame(render);
+            }
+            render();
+        }
+
+        // Init
+        document.getElementById('day-' + currentDay).classList.add('active');
+        updateUI();
+    </script>
 </body>
 </html>
