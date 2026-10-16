@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>黃玉翔會不會來？ - 8-Bit 彈跳肉鴿週結算版</title>
+    <title>黃玉翔會不會來？ - Undertale 彈幕戰鬥與抉擇肉鴿版</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -14,7 +14,11 @@
             --accent-gold: #ffcc00;
             --accent-cyan: #05d9e8;
             --accent-purple: #b537f2;
+            --accent-orange: #ff9f1c;
             --text-color: #f0f0f0;
+            --ut-red: #ff0000;
+            --ut-yellow: #ffff00;
+            --ut-orange: #ff9900;
         }
 
         * {
@@ -32,7 +36,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 15px 8px;
+            padding: 10px 5px;
             background-image: 
                 radial-gradient(#1f1545 15%, transparent 16%),
                 radial-gradient(#1f1545 15%, transparent 16%);
@@ -41,22 +45,16 @@
             overflow-x: hidden;
         }
 
-        /* --- Bouncy Keyframe Animations --- */
+        /* Bouncy Animations */
         @keyframes bounceAnim {
             0% { transform: translateY(0); }
-            50% { transform: translateY(-8px) scale(1.03); }
+            50% { transform: translateY(-5px) scale(1.02); }
             100% { transform: translateY(0); }
         }
 
-        @keyframes pulseElastic {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.12); }
-            100% { transform: scale(1); }
-        }
-
         @keyframes popIn {
-            0% { transform: scale(0.3) rotate(-5deg); opacity: 0; }
-            70% { transform: scale(1.1) rotate(2deg); opacity: 1; }
+            0% { transform: scale(0.4) rotate(-5deg); opacity: 0; }
+            70% { transform: scale(1.08) rotate(2deg); opacity: 1; }
             100% { transform: scale(1) rotate(0deg); opacity: 1; }
         }
 
@@ -65,20 +63,16 @@
             50% { transform: rotate(3deg); }
         }
 
-        .bounce-text {
-            display: inline-block;
-            animation: bounceAnim 1.2s infinite ease-in-out;
+        @keyframes soulFlicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
         }
 
-        .wiggle-element {
-            animation: wiggle 2s infinite ease-in-out;
-        }
+        .bounce-text { display: inline-block; animation: bounceAnim 1.2s infinite ease-in-out; }
+        .wiggle-element { animation: wiggle 2s infinite ease-in-out; }
+        .pop-in-box { animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
-        .pop-in-box {
-            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        /* CRT Scanline Effect */
+        /* CRT Overlay */
         .crt-overlay {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -94,20 +88,20 @@
 
         .header {
             text-align: center;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
 
         .header h1 {
             font-family: 'Press Start 2P', 'Noto Sans TC', cursive;
-            font-size: 1.5rem;
+            font-size: 1.35rem;
             color: var(--accent-gold);
             text-shadow: 3px 3px 0px #000, -2px -2px 0px #ff2a6d;
             letter-spacing: 2px;
-            margin-bottom: 6px;
+            margin-bottom: 3px;
         }
 
         .header p {
-            font-size: 0.85rem;
+            font-size: 0.78rem;
             color: var(--accent-cyan);
             letter-spacing: 1px;
             font-weight: bold;
@@ -115,50 +109,47 @@
 
         .main-layout {
             width: 100%;
-            max-width: 1150px;
+            max-width: 1200px;
             display: grid;
             grid-template-columns: 1fr;
-            gap: 12px;
+            gap: 10px;
         }
 
-        @media (min-width: 950px) {
+        @media (min-width: 960px) {
             .main-layout {
-                grid-template-columns: 310px 1fr 280px;
+                grid-template-columns: 280px 1fr 320px;
             }
         }
 
-        /* Pixel Box Styling */
+        /* Pixel Box */
         .pixel-box {
             background: var(--card-bg);
             border: 4px solid #fff;
-            box-shadow: 
-                0 0 0 4px #000, 
-                5px 5px 0px 4px #000;
-            padding: 12px;
+            box-shadow: 0 0 0 4px #000, 5px 5px 0px 4px #000;
+            padding: 10px;
             position: relative;
-            margin-bottom: 10px;
-            transition: transform 0.2s ease;
+            margin-bottom: 8px;
         }
 
         .pixel-title {
             font-family: 'Press Start 2P', 'Noto Sans TC', monospace;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--accent-gold);
             background: #000;
             display: inline-block;
-            padding: 4px 8px;
-            margin-bottom: 8px;
+            padding: 3px 6px;
+            margin-bottom: 6px;
             border: 2px solid var(--accent-gold);
         }
 
-        /* Left Panel - Profile & Schedule */
+        /* Left Panel */
         .profile-card { text-align: center; }
 
         .avatar-container {
             position: relative;
-            width: 130px;
-            height: 130px;
-            margin: 0 auto 8px;
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 6px;
             border: 4px solid var(--accent-gold);
             box-shadow: 0 0 0 4px #000;
             overflow: hidden;
@@ -167,9 +158,7 @@
             transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .avatar-container:hover {
-            transform: scale(1.08) rotate(2deg);
-        }
+        .avatar-container:hover { transform: scale(1.08) rotate(2deg); }
 
         .avatar-img {
             width: 100%;
@@ -181,25 +170,48 @@
         .badge-school {
             background: #e63946;
             color: #fff;
-            padding: 2px 6px;
-            font-size: 0.72rem;
+            padding: 2px 5px;
+            font-size: 0.68rem;
             font-weight: bold;
             border-radius: 2px;
             display: inline-block;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
 
-        /* Schedule selector */
+        .lethargy-card {
+            background: #230816;
+            border: 2px solid var(--accent-red);
+            padding: 6px;
+            margin-top: 6px;
+            text-align: left;
+            font-size: 0.68rem;
+        }
+
+        .decay-bar-outer {
+            width: 100%;
+            height: 10px;
+            background: #000;
+            border: 2px solid #fff;
+            margin-top: 3px;
+        }
+
+        .decay-bar-inner {
+            height: 100%;
+            background: linear-gradient(90deg, #ff9f1c, #ff2a6d);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
         .day-buttons {
             display: flex;
-            gap: 4px;
-            margin-top: 6px;
+            gap: 3px;
+            margin-top: 4px;
             justify-content: center;
         }
 
         .btn-day {
-            font-size: 0.7rem;
-            padding: 4px 8px;
+            font-size: 0.65rem;
+            padding: 3px 6px;
             background: #1f1838;
             color: #aaa;
             border: 2px solid #555;
@@ -209,7 +221,7 @@
         }
 
         .btn-day:hover, .btn-day.active {
-            transform: scale(1.15) translateY(-2px);
+            transform: scale(1.12) translateY(-2px);
             background: var(--accent-gold);
             color: #000;
             border-color: #000;
@@ -217,27 +229,27 @@
         }
 
         .schedule-info {
-            font-size: 0.72rem;
+            font-size: 0.68rem;
             background: #000;
             border: 2px solid #333;
-            padding: 6px;
+            padding: 5px;
             margin-top: 6px;
             text-align: left;
-            line-height: 1.4;
+            line-height: 1.35;
         }
 
         .subject-tag {
             display: inline-block;
             padding: 1px 4px;
             border-radius: 2px;
-            font-size: 0.68rem;
+            font-size: 0.62rem;
             margin: 1px;
         }
 
         .tag-main { background: #b5179e; color: #fff; }
         .tag-easy { background: #2a9d8f; color: #fff; }
 
-        /* Center Panel - Wheel */
+        /* Center Panel */
         .wheel-section {
             display: flex;
             flex-direction: column;
@@ -247,32 +259,28 @@
 
         .wheel-wrapper {
             position: relative;
-            width: 280px;
-            height: 280px;
-            margin: 8px auto;
+            width: 250px;
+            height: 250px;
+            margin: 5px auto;
         }
 
         #wheelCanvas {
-            width: 280px;
-            height: 280px;
+            width: 250px;
+            height: 250px;
             border-radius: 50%;
-            box-shadow: 
-                0 0 0 6px #000,
-                0 0 0 10px var(--accent-gold),
-                0 0 20px rgba(0,255,200,0.3);
-            transition: transform 0.1s ease;
+            box-shadow: 0 0 0 5px #000, 0 0 0 9px var(--accent-gold), 0 0 18px rgba(0,255,200,0.3);
         }
 
         .pointer {
             position: absolute;
-            top: -14px;
+            top: -13px;
             left: 50%;
             transform: translateX(-50%);
             width: 0;
             height: 0;
-            border-left: 14px solid transparent;
-            border-right: 14px solid transparent;
-            border-top: 28px solid var(--accent-gold);
+            border-left: 13px solid transparent;
+            border-right: 13px solid transparent;
+            border-top: 26px solid var(--accent-gold);
             filter: drop-shadow(0px 3px 0px #000);
             z-index: 10;
         }
@@ -282,10 +290,10 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 60px;
-            height: 60px;
+            width: 52px;
+            height: 52px;
             border-radius: 50%;
-            border: 4px solid var(--accent-gold);
+            border: 3px solid var(--accent-gold);
             box-shadow: 0 0 0 3px #000;
             overflow: hidden;
             background: #000;
@@ -293,26 +301,21 @@
             pointer-events: none;
         }
 
-        .center-avatar-hub img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .center-avatar-hub img { width: 100%; height: 100%; object-fit: cover; }
 
         .controls {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 6px;
-            margin-top: 8px;
+            gap: 5px;
+            margin-top: 6px;
             width: 100%;
         }
 
-        /* Elastic Bouncy Buttons */
         .btn-pixel {
             font-family: 'Press Start 2P', 'Noto Sans TC', sans-serif;
-            font-size: 0.72rem;
-            padding: 8px 10px;
+            font-size: 0.68rem;
+            padding: 7px 9px;
             background: #2a2a40;
             color: #fff;
             border: 3px solid #fff;
@@ -321,75 +324,79 @@
             transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.15s ease;
         }
 
-        .btn-pixel:hover {
-            transform: scale(1.06) translateY(-2px);
-            box-shadow: 4px 4px 0px #000;
-        }
-
-        .btn-pixel:active {
-            transform: scale(0.95) translate(2px, 2px);
-            box-shadow: 1px 1px 0px #000;
-        }
+        .btn-pixel:hover { transform: scale(1.05) translateY(-2px); box-shadow: 4px 4px 0px #000; }
+        .btn-pixel:active { transform: scale(0.95) translate(2px, 2px); box-shadow: 1px 1px 0px #000; }
 
         .btn-gold { background: var(--accent-gold); color: #000; border-color: #000; font-weight: bold; }
         .btn-green { background: var(--accent-green); color: #000; border-color: #000; font-weight: bold; }
         .btn-cyan { background: var(--accent-cyan); color: #000; border-color: #000; font-weight: bold; }
         .btn-purple { background: var(--accent-purple); color: #fff; border-color: #fff; font-weight: bold; }
+        .btn-ut { background: #ff0055; color: #fff; border-color: #ffcc00; font-weight: bold; animation: pulseElastic 1.5s infinite; }
+
+        @keyframes pulseElastic {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.04); }
+            100% { transform: scale(1); }
+        }
 
         .result-box {
-            min-height: 75px;
+            min-height: 65px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            margin-top: 8px;
+            margin-top: 6px;
             width: 100%;
             background: #090514;
             border: 3px solid var(--accent-cyan);
             box-shadow: 4px 4px 0px #000;
-            padding: 8px;
+            padding: 6px;
             text-align: center;
         }
 
-        /* Roguelite Relic Cards */
-        .relic-group {
+        /* Two-Choice Event Card */
+        .choice-event-card {
+            background: #180d28;
+            border: 3px solid var(--accent-gold);
+            box-shadow: 3px 3px 0px #000;
+            padding: 8px;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .choice-title { font-size: 0.78rem; font-weight: bold; color: var(--accent-gold); margin-bottom: 3px; }
+        .choice-desc { font-size: 0.7rem; color: #ddd; margin-bottom: 6px; line-height: 1.3; }
+
+        .choice-options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+
+        .btn-choice {
+            background: #251b45;
+            color: #fff;
+            border: 2px solid #fff;
+            padding: 6px;
+            font-size: 0.68rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: flex;
             flex-direction: column;
-            gap: 6px;
-            margin-top: 4px;
-        }
-
-        .relic-card {
-            background: #000;
-            border: 2px solid #555;
-            padding: 6px;
-            font-size: 0.7rem;
-            display: flex;
-            align-items: center;
             justify-content: space-between;
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .relic-card:hover {
-            transform: scale(1.03) translateX(3px);
-            border-color: var(--accent-gold);
-        }
+        .btn-choice:hover { transform: scale(1.04) translateY(-2px); border-color: var(--accent-gold); background: #392866; }
 
-        .relic-card.active {
-            border-color: var(--accent-gold);
-            background: #231d04;
-            box-shadow: 2px 2px 0px var(--accent-gold);
-        }
+        .choice-val-green { color: var(--accent-green); font-size: 0.62rem; margin-top: 2px; }
+        .choice-val-red { color: var(--accent-red); font-size: 0.62rem; margin-top: 2px; }
 
         /* Phone Widget */
         .phone-box {
             background: #2d0b2e;
             border: 3px solid var(--accent-purple);
             box-shadow: 3px 3px 0px #000;
-            padding: 10px;
+            padding: 8px;
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .phone-btn {
@@ -398,28 +405,22 @@
             border: 3px solid #fff;
             box-shadow: 3px 3px 0px #000;
             font-weight: bold;
-            font-size: 0.75rem;
-            padding: 8px;
+            font-size: 0.7rem;
+            padding: 6px;
             width: 100%;
             cursor: pointer;
-            margin-top: 4px;
-            transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-top: 3px;
         }
 
-        .phone-btn:hover {
-            transform: scale(1.05) rotate(-1deg);
-        }
-
-        /* Speech Bubble */
         .speech-bubble {
             position: absolute;
-            top: -42px;
+            top: -38px;
             left: 50%;
             transform: translateX(-50%);
             background: #fff;
             color: #000;
-            padding: 4px 8px;
-            font-size: 0.7rem;
+            padding: 3px 6px;
+            font-size: 0.65rem;
             font-weight: bold;
             white-space: nowrap;
             border: 2px solid #000;
@@ -434,30 +435,187 @@
 
         /* Log Box */
         .log-box {
-            max-height: 100px;
+            max-height: 85px;
             overflow-y: auto;
-            font-size: 0.72rem;
+            font-size: 0.68rem;
             background: #000;
             border: 2px solid #333;
-            padding: 6px;
+            padding: 5px;
             font-family: monospace;
             text-align: left;
         }
 
         .tag-yes { color: var(--accent-green); font-weight: bold; }
         .tag-no { color: var(--accent-red); font-weight: bold; }
-        
+
         .prob-badge {
             background: #222;
             color: var(--accent-gold);
             padding: 2px 6px;
             border: 1px solid var(--accent-gold);
-            font-size: 0.72rem;
+            font-size: 0.68rem;
             display: inline-block;
             margin-top: 2px;
         }
 
-        /* --- Weekly Settlement Modal --- */
+        /* --- UNDERTALE BATTLE MODAL STYLES --- */
+        .ut-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            font-family: 'Press Start 2P', monospace;
+            padding: 10px;
+        }
+
+        .ut-modal-overlay.show { display: flex; }
+
+        .ut-battle-container {
+            width: 100%;
+            max-width: 540px;
+            background: #000;
+            border: 4px solid #fff;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .ut-boss-display {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        .ut-boss-avatar {
+            width: 70px;
+            height: 70px;
+            border: 3px solid #fff;
+            image-rendering: pixelated;
+        }
+
+        .ut-boss-info {
+            text-align: left;
+            font-size: 0.75rem;
+            line-height: 1.6;
+            color: #fff;
+        }
+
+        /* Canvas Arena (Bullet Board) */
+        .ut-arena-wrapper {
+            position: relative;
+            width: 320px;
+            height: 200px;
+            border: 5px solid #fff;
+            background: #000;
+            margin: 8px 0;
+            overflow: hidden;
+        }
+
+        #utArenaCanvas {
+            width: 320px;
+            height: 200px;
+            display: block;
+        }
+
+        /* Undertale HP Bar */
+        .ut-stat-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 320px;
+            font-size: 0.7rem;
+            margin: 6px 0;
+            color: #fff;
+        }
+
+        .ut-hp-bar-outer {
+            width: 100px;
+            height: 14px;
+            background: var(--ut-red);
+            border: 1px solid #000;
+            display: inline-block;
+            vertical-align: middle;
+            margin: 0 6px;
+        }
+
+        .ut-hp-bar-inner {
+            height: 100%;
+            background: var(--ut-yellow);
+            width: 100%;
+        }
+
+        /* Undertale Text Dialogue Box */
+        .ut-dialogue-box {
+            width: 100%;
+            height: 60px;
+            border: 3px solid #fff;
+            background: #000;
+            padding: 8px;
+            font-size: 0.7rem;
+            line-height: 1.5;
+            color: #fff;
+            text-align: left;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        /* Undertale Action Buttons (FIGHT, ACT, ITEM, MERCY) */
+        .ut-action-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            width: 100%;
+        }
+
+        .ut-btn {
+            background: #000;
+            color: var(--ut-orange);
+            border: 3px solid var(--ut-orange);
+            padding: 8px 2px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 0.62rem;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.1s;
+        }
+
+        .ut-btn:hover, .ut-btn.active {
+            background: var(--ut-orange);
+            color: #000;
+            box-shadow: 0 0 10px var(--ut-orange);
+        }
+
+        /* Mobile Touch D-Pad for Undertale Heart */
+        .ut-dpad-container {
+            display: grid;
+            grid-template-columns: repeat(3, 36px);
+            grid-template-rows: repeat(2, 36px);
+            gap: 4px;
+            margin-top: 8px;
+        }
+
+        .ut-dpad-btn {
+            background: #222;
+            color: #fff;
+            border: 2px solid #fff;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .ut-dpad-btn:active { background: var(--ut-yellow); color: #000; }
+
+        /* Weekly Settlement Modal */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -475,33 +633,29 @@
             border: 5px solid var(--accent-gold);
             box-shadow: 0 0 30px var(--accent-gold);
             width: 90%;
-            max-width: 500px;
-            padding: 20px;
+            max-width: 480px;
+            padding: 16px;
             text-align: center;
             color: #fff;
         }
 
         .weekly-rank {
             font-family: 'Press Start 2P', monospace;
-            font-size: 3rem;
+            font-size: 2.8rem;
             color: var(--accent-gold);
             text-shadow: 4px 4px 0px #ff2a6d;
-            margin: 10px 0;
+            margin: 8px 0;
         }
 
         .weekly-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 4px;
-            margin: 15px 0;
-            font-size: 0.7rem;
+            margin: 12px 0;
+            font-size: 0.68rem;
         }
 
-        .weekly-day-box {
-            background: #000;
-            border: 1px solid #444;
-            padding: 4px;
-        }
+        .weekly-day-box { background: #000; border: 1px solid #444; padding: 3px; }
 
         #confettiCanvas {
             position: fixed;
@@ -518,7 +672,7 @@
 
     <div class="header">
         <h1 class="bounce-text">黃玉翔會不會來？</h1>
-        <p class="wiggle-element">🎮 8-BIT 彈跳肉鴿 + 課表 + 一週大結算 🎮</p>
+        <p class="wiggle-element">🎮 8-BIT UNDERTALE 戰鬥 + 抉擇拯救 + 週結算 🎮</p>
     </div>
 
     <div class="main-layout">
@@ -529,8 +683,8 @@
                 <div class="pixel-title">CHARACTER</div>
                 
                 <div class="avatar-container" onclick="speakRandomQuote()">
-                    <div class="speech-bubble" id="speechBubble">Timing對了就來！</div>
-                    <img src="19169_2.jpg" class="avatar-img" alt="黃玉翔" onerror="this.src='https://via.placeholder.com/130/000/fff?text=黃玉翔'">
+                    <div class="speech-bubble" id="speechBubble">進入 Undertale 戰鬥救我！</div>
+                    <img src="19169_2.jpg" class="avatar-img" alt="黃玉翔" onerror="this.src='https://via.placeholder.com/110/000/fff?text=黃玉翔'">
                 </div>
 
                 <div>
@@ -538,9 +692,21 @@
                     <strong>黃玉翔</strong> <span style="color:var(--accent-gold);" class="bounce-text">LV.99</span>
                 </div>
 
-                <!-- Timetable Day Selector -->
-                <div style="margin-top:8px;">
-                    <span style="font-size:0.72rem; font-weight:bold; color:var(--accent-gold);">🗓️ 課表切換：</span>
+                <!-- Lethargy Decay Bar -->
+                <div class="lethargy-card">
+                    <div style="display:flex; justify-content:space-between; font-weight:bold;">
+                        <span>💤 自然怠惰累積度：</span>
+                        <span style="color:var(--accent-red);" id="decayPercentText">-0%</span>
+                    </div>
+                    <div style="font-size:0.6rem; color:#aaa; margin-top:2px;">* 每次抽選怠惰感會自動上升！</div>
+                    <div class="decay-bar-outer">
+                        <div class="decay-bar-inner" id="decayBarInner"></div>
+                    </div>
+                </div>
+
+                <!-- Timetable Selector -->
+                <div style="margin-top:6px;">
+                    <span style="font-size:0.68rem; font-weight:bold; color:var(--accent-gold);">🗓️ 課表切換：</span>
                     <div class="day-buttons">
                         <button class="btn-day" id="day-Mon" onclick="selectDay('Mon')">一</button>
                         <button class="btn-day" id="day-Tue" onclick="selectDay('Tue')">二</button>
@@ -551,7 +717,7 @@
                 </div>
 
                 <div class="schedule-info" id="scheduleInfo">
-                    <!-- Dynamic schedule info -->
+                    <!-- Loaded via JS -->
                 </div>
             </div>
         </div>
@@ -565,9 +731,9 @@
 
                 <div class="wheel-wrapper">
                     <div class="pointer"></div>
-                    <canvas id="wheelCanvas" width="280" height="280"></canvas>
+                    <canvas id="wheelCanvas" width="250" height="250"></canvas>
                     <div class="center-avatar-hub wiggle-element">
-                        <img src="19169_2.jpg" alt="黃玉翔" onerror="this.src='https://via.placeholder.com/60/000/fff?text=黃'">
+                        <img src="19169_2.jpg" alt="黃玉翔" onerror="this.src='https://via.placeholder.com/52/000/fff?text=黃'">
                     </div>
                 </div>
 
@@ -581,104 +747,154 @@
                     <button class="btn-pixel btn-gold" onclick="spinFullDay()">
                         ⚡ 全日雙考驗
                     </button>
+                    <button class="btn-pixel btn-ut" onclick="openUndertaleBattle()">
+                        ⚔️ UNDERTALE 彈幕出席戰
+                    </button>
                     <button class="btn-pixel btn-purple" onclick="simulateFullWeek()">
                         🗓️ 一鍵全週大結算 (10連抽)
                     </button>
                 </div>
 
                 <div class="result-box" id="resultBox">
-                    <div style="color:var(--accent-gold); font-weight:bold; font-size:0.95rem;" class="bounce-text">READY TO SPIN!</div>
-                    <div style="font-size:0.75rem; color:#ccc; margin-top:4px;">肉鴿聖物加成 + 307課表 + 一週結算</div>
+                    <div style="color:var(--accent-gold); font-weight:bold; font-size:0.88rem;" class="bounce-text">READY TO SPIN!</div>
+                    <div style="font-size:0.7rem; color:#ccc; margin-top:2px;">點擊【UNDERTALE 戰鬥】親自彈幕避險拉高機率！</div>
                 </div>
             </div>
 
             <div class="pixel-box">
                 <div class="pixel-title">LOGS</div>
                 <div class="log-box" id="logBox">
-                    <div>[系統就緒] 肉鴿聖物與 307 課表引擎載入完畢。</div>
+                    <div>[系統就緒] Undertale 彈幕戰鬥模組與抉擇引擎已就緒。</div>
                 </div>
             </div>
         </div>
 
-        <!-- Right Panel: Phone & Roguelite Relics -->
+        <!-- Right Panel: Two-Choice Card & Phone -->
         <div class="right-panel">
             
+            <!-- Two-Choice Interactive Event Widget -->
+            <div class="choice-event-card pop-in-box" id="choiceCardBox">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
+                    <div class="choice-title" id="choiceEventTitle">🍱 突發二選一事件</div>
+                    <button class="btn-pixel" style="font-size:0.55rem; padding:2px 4px;" onclick="refreshChoiceEvent()">🎲 換一題</button>
+                </div>
+                
+                <div class="choice-desc" id="choiceEventDesc">加載抉擇事件中...</div>
+
+                <div class="choice-options-grid">
+                    <button class="btn-choice" id="btnOptA" onclick="makeChoice('A')">
+                        <span id="optAText">選項 A</span>
+                        <span class="choice-val-green" id="optAVal">+0%</span>
+                    </button>
+
+                    <button class="btn-choice" id="btnOptB" onclick="makeChoice('B')">
+                        <span id="optBText">選項 B</span>
+                        <span class="choice-val-red" id="optBVal">-0%</span>
+                    </button>
+                </div>
+
+                <div style="font-size:0.62rem; color:var(--accent-cyan); margin-top:5px;" id="choiceFeedback">
+                    👈 點擊抉擇改變黃玉翔命運！
+                </div>
+            </div>
+
             <!-- Phone Call Widget -->
             <div class="phone-box">
-                <div style="font-size:0.78rem; font-weight:bold; color:var(--accent-purple);" class="bounce-text">☎️ 熱線急催</div>
-                <div style="font-size:0.72rem; color:#ddd; margin:2px 0;">「Timing很重要，快點來啦！」</div>
+                <div style="font-size:0.72rem; font-weight:bold; color:var(--accent-purple);" class="bounce-text">☎️ 熱線急催</div>
+                <div style="font-size:0.68rem; color:#ddd; margin:2px 0;">「Timing很重要，快點來啦！」</div>
                 <button class="phone-btn" onclick="callHotline()">
                     📞 撥打電話催人 (+15%)
                 </button>
-                <div style="font-size:0.7rem; color:var(--accent-cyan); margin-top:4px;" id="phoneStatus">通話狀態: 待命</div>
+                <div style="font-size:0.65rem; color:var(--accent-cyan); margin-top:3px;" id="phoneStatus">通話狀態: 待命</div>
             </div>
 
-            <!-- Roguelite Relics / Modifiers -->
-            <div class="pixel-box">
-                <div class="pixel-title">🕹️ 肉鴿聖物 (ROGUELITE)</div>
-                <div style="font-size:0.68rem; color:#aaa; margin-bottom:6px;">點擊開啟天賦加成/詛咒：</div>
-                
-                <div class="relic-group">
-                    
-                    <div class="relic-card" id="relic-R1" onclick="toggleRelic('R1')">
-                        <div>
-                            <strong>⏰ 鬧鐘響兩百響</strong><br>
-                            <span style="color:var(--accent-green); font-size:0.63rem;">極限硬起 (+12%)</span>
-                        </div>
-                        <input type="checkbox" id="chk-R1" pointer-events="none">
-                    </div>
-
-                    <div class="relic-card" id="relic-R2" onclick="toggleRelic('R2')">
-                        <div>
-                            <strong>😭 蔚藍檔案維修延長</strong><br>
-                            <span style="color:var(--accent-red); font-size:0.63rem;">體力發放 (-22%)</span>
-                        </div>
-                        <input type="checkbox" id="chk-R2" pointer-events="none">
-                    </div>
-
-                    <div class="relic-card" id="relic-R3" onclick="toggleRelic('R3')">
-                        <div>
-                            <strong>🌵 荒野亂鬥新賽季</strong><br>
-                            <span style="color:#ff9f1c; font-size:0.63rem;">上分衝刺 (-10%)</span>
-                        </div>
-                        <input type="checkbox" id="chk-R3" pointer-events="none">
-                    </div>
-
-                    <div class="relic-card" id="relic-R4" onclick="toggleRelic('R4')">
-                        <div>
-                            <strong>👑 沈玉梅導師眼神殺</strong><br>
-                            <span style="color:#e63946; font-size:0.63rem;">主科懲罰雙倍 (-10%/科)</span>
-                        </div>
-                        <input type="checkbox" id="chk-R4" pointer-events="none">
-                    </div>
-
-                    <button class="btn-pixel" style="font-size:0.65rem; width:100%; margin-top:4px;" onclick="randomizeRelics()">
-                        🎲 隨機肉鴿聖物組
-                    </button>
-                </div>
+            <div class="pixel-box" style="text-align:center;">
+                <button class="btn-pixel" style="font-size:0.62rem; width:100%; background:#e63946;" onclick="resetLethargy()">
+                    🔄 重置自然怠惰衰減 (消除累積降幅)
+                </button>
             </div>
 
         </div>
 
     </div>
 
+    <!-- UNDERTALE BATTLE MODAL -->
+    <div class="ut-modal-overlay" id="undertaleModal">
+        <div class="ut-battle-container pop-in-box">
+            
+            <div class="ut-boss-display">
+                <img src="19169_2.jpg" class="ut-boss-avatar" alt="黃玉翔" onerror="this.src='https://via.placeholder.com/70/000/fff?text=黃'">
+                <div class="ut-boss-info">
+                    <div style="color:var(--ut-yellow); font-size:0.85rem;">黃玉翔 (睡意封印態)</div>
+                    <div style="color:#aaa; font-size:0.62rem;">AT 15  DF 20  *正沉睡於床鋪深處...</div>
+                </div>
+            </div>
+
+            <!-- Bullet Arena -->
+            <div class="ut-arena-wrapper" id="utArenaWrapper">
+                <canvas id="utArenaCanvas" width="320" height="200"></canvas>
+            </div>
+
+            <!-- HP Row -->
+            <div class="ut-stat-row">
+                <span>HUANG  LV 99</span>
+                <div>
+                    <span>HP</span>
+                    <div class="ut-hp-bar-outer">
+                        <div class="ut-hp-bar-inner" id="utHpBarInner"></div>
+                    </div>
+                    <span id="utHpText">20 / 20</span>
+                </div>
+                <span id="utTimerText" style="color:var(--ut-yellow);">08.0s</span>
+            </div>
+
+            <!-- Text Dialogue Box -->
+            <div class="ut-dialogue-box" id="utDialogueBox">
+                * 黃玉翔擋在了出席的道路上！<br>
+                * 請控制紅色心形靈魂 (❤️) 躲避怠惰彈幕！
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="ut-action-grid">
+                <button class="ut-btn" onclick="utAction('FIGHT')">⚔️ FIGHT</button>
+                <button class="ut-btn" onclick="utAction('ACT')">🎭 ACT</button>
+                <button class="ut-btn" onclick="utAction('ITEM')">🎒 ITEM</button>
+                <button class="ut-btn" onclick="utAction('MERCY')">💛 MERCY</button>
+            </div>
+
+            <!-- Mobile D-Pad Control -->
+            <div class="ut-dpad-container">
+                <div></div>
+                <div class="ut-dpad-btn" onclick="moveSoul(0, -12)">▲</div>
+                <div></div>
+                <div class="ut-dpad-btn" onclick="moveSoul(-12, 0)">◄</div>
+                <div class="ut-dpad-btn" onclick="moveSoul(0, 12)">▼</div>
+                <div class="ut-dpad-btn" onclick="moveSoul(12, 0)">►</div>
+            </div>
+
+            <button class="btn-pixel" style="margin-top:8px; font-size:0.6rem; background:#333;" onclick="closeUndertaleBattle()">
+                ✖ 撤退 (退出戰鬥)
+            </button>
+        </div>
+    </div>
+
     <!-- Weekly Settlement Modal -->
     <div class="modal-overlay" id="weeklyModal">
         <div class="weekly-card pop-in-box">
-            <div class="pixel-title" style="font-size:1rem;">🗓️ 307 班一週出席總結算報告</div>
+            <div class="pixel-title" style="font-size:0.92rem;">🗓️ 307 班一週出席總結算報告</div>
             
             <div class="weekly-rank bounce-text" id="weeklyRank">RANK S</div>
-            <div style="font-size:0.9rem; color:var(--accent-gold); font-weight:bold;" id="weeklyTitle">【出席率戰神】</div>
+            <div style="font-size:0.82rem; color:var(--accent-gold); font-weight:bold;" id="weeklyTitle">【出席率戰神】</div>
 
             <div class="weekly-grid" id="weeklyGrid">
                 <!-- Loaded via JS -->
             </div>
 
-            <div style="font-size:0.82rem; background:#000; border:2px solid #555; padding:8px; margin-bottom:12px;" id="weeklyComment">
+            <div style="font-size:0.78rem; background:#000; border:2px solid #555; padding:8px; margin-bottom:10px;" id="weeklyComment">
                 評語加載中...
             </div>
 
-            <button class="btn-pixel btn-gold" style="font-size:0.85rem;" onclick="closeWeeklyModal()">
+            <button class="btn-pixel btn-gold" style="font-size:0.8rem;" onclick="closeWeeklyModal()">
                 👌 收到！繼續下一週
             </button>
         </div>
@@ -729,6 +945,11 @@
             notes.forEach((freq, i) => setTimeout(() => playBeep(freq, 0.18, 'sawtooth'), i * 90));
         }
 
+        function playMegalovaniaIntro() {
+            const notes = [293, 293, 587, 440, 415, 392, 349, 293, 349, 392];
+            notes.forEach((freq, i) => setTimeout(() => playBeep(freq, 0.1, 'square'), i * 85));
+        }
+
         // --- Timetable Data ---
         const timetable = {
             Mon: {
@@ -758,40 +979,309 @@
             }
         };
 
+        // Two-Choice Event Cards
+        const choiceDeck = [
+            {
+                title: "🍱 早餐誘惑危機",
+                desc: "黃玉翔正在床上掙扎，你要採取什麼手段？",
+                optA: { text: "買超好吃起司蛋餅送到他家門口", val: 0.22, msg: "香氣撲鼻！起床動力大爆發 (+22%)" },
+                optB: { text: "不管他，自己在學校吃雙份", val: -0.15, msg: "無人救援，他選擇繼續酣睡 (-15%)" }
+            },
+            {
+                title: "📝 數甲作業急救測驗",
+                desc: "今天有吳明霞老師的數學甲，作業還沒寫完！",
+                optA: { text: "拍作業答案高清圖傳給他抄", val: 0.25, msg: "抄完全部作業，安全感十足出門 (+25%)" },
+                optB: { text: "開玩笑說老師今天準備突襲抽查", val: -0.20, msg: "嚇到不敢面對，決定直接請假 (-20%)" }
+            },
+            {
+                title: "😭 蔚藍檔案維修完畢",
+                desc: "遊戲突然維修好了，剛好發放補貼 1200 石！",
+                optA: { text: "狂打電話：我開車去載你啦！", val: 0.20, msg: "Timing對了！硬著頭皮穿校服出門 (+20%)" },
+                optB: { text: "跟他一起開語音上線抽卡清體力", val: -0.25, msg: "雙雙沉迷抽卡，精神徹底沉淪 (-25%)" }
+            },
+            {
+                title: "👩‍🏫 沈玉梅導師眼神殺",
+                desc: "導師沈玉梅開始巡視 307 班後門點名...",
+                optA: { text: "偷拍導師站在後門的照片傳給他", val: 0.28, msg: "求生慾強烈爆發！火速出發 (+28%)" },
+                optB: { text: "幫忙跟導師說他體溫過高在家休息", val: -0.18, msg: "獲得合法請假藉口，安心睡覺 (-18%)" }
+            }
+        ];
+
         // State
         let currentDay = 'Mon';
         let currentMode = 'AM';
         let phoneBuffActive = false;
+        let undertaleBuff = 0.0; // Buff gained from Undertale Battle win
         let isSpinning = false;
         let currentAngle = 0;
 
-        // Roguelite Relic State
-        let relics = {
-            R1: false, // Alarm (+12%)
-            R2: false, // Blue Archive (-22%)
-            R3: false, // Brawl Stars (-10%)
-            R4: false  // Teacher's Stare (Double main subject penalty)
-        };
+        let lethargyDecay = 0.0;
+        let playerChoiceModifier = 0.0;
+        let currentChoiceIdx = 0;
 
-        function toggleRelic(id) {
-            if (isSpinning) return;
-            relics[id] = !relics[id];
-            document.getElementById('chk-' + id).checked = relics[id];
-            document.getElementById('relic-' + id).classList.toggle('active', relics[id]);
-            playBeep(480, 0.05);
-            updateUI();
+        // --- UNDERTALE BULLET HELL ENGINE ---
+        const utCanvas = document.getElementById('utArenaCanvas');
+        const utCtx = utCanvas.getContext('2d');
+
+        let utActive = false;
+        let utAnimFrame = null;
+        let utTimer = 8.0;
+        let utSoul = { x: 160, y: 100, size: 8, hp: 20, maxHp: 20, invinc: 0 };
+        let utBullets = [];
+        let utKeys = {};
+
+        // Keyboard Event Listeners for Heart Soul Control
+        window.addEventListener('keydown', (e) => {
+            if (!utActive) return;
+            utKeys[e.key] = true;
+            if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) e.preventDefault();
+        });
+
+        window.addEventListener('keyup', (e) => {
+            if (!utActive) return;
+            utKeys[e.key] = false;
+        });
+
+        // Touch & Drag Control for Mobile
+        utCanvas.addEventListener('touchmove', (e) => {
+            if (!utActive) return;
+            e.preventDefault();
+            const rect = utCanvas.getBoundingClientRect();
+            const touch = e.touches[0];
+            utSoul.x = Math.max(10, Math.min(310, touch.clientX - rect.left));
+            utSoul.y = Math.max(10, Math.min(190, touch.clientY - rect.top));
+        });
+
+        function moveSoul(dx, dy) {
+            if (!utActive) return;
+            utSoul.x = Math.max(10, Math.min(310, utSoul.x + dx));
+            utSoul.y = Math.max(10, Math.min(190, utSoul.y + dy));
         }
 
-        function randomizeRelics() {
+        function openUndertaleBattle() {
             if (isSpinning) return;
-            Object.keys(relics).forEach(key => {
-                relics[key] = Math.random() < 0.4;
-                document.getElementById('chk-' + key).checked = relics[key];
-                document.getElementById('relic-' + key).classList.toggle('active', relics[key]);
+            playMegalovaniaIntro();
+            
+            utActive = true;
+            utTimer = 8.0;
+            utSoul = { x: 160, y: 100, size: 8, hp: 20, maxHp: 20, invinc: 0 };
+            utBullets = [];
+            
+            document.getElementById('utHpText').innerText = "20 / 20";
+            document.getElementById('utHpBarInner').style.width = "100%";
+            document.getElementById('utTimerText').innerText = "08.0s";
+            document.getElementById('utDialogueBox').innerHTML = "* 黃玉翔正沉睡於床鋪深處！<br>* 請用方向鍵控制紅色靈魂 (❤️) 躲避彈幕！";
+
+            document.getElementById('undertaleModal').classList.add('show');
+            
+            lastUtTime = performance.now();
+            requestAnimationFrame(utLoop);
+            addLog(`⚔️ 進入 Undertale 彈幕戰場！`);
+        }
+
+        function closeUndertaleBattle() {
+            utActive = false;
+            if (utAnimFrame) cancelAnimationFrame(utAnimFrame);
+            document.getElementById('undertaleModal').classList.remove('show');
+        }
+
+        let lastUtTime = 0;
+
+        function utLoop(now) {
+            if (!utActive) return;
+            const dt = (now - lastUtTime) / 1000;
+            lastUtTime = now;
+
+            utTimer -= dt;
+            if (utTimer <= 0) {
+                utTimer = 0;
+                utWin();
+                return;
+            }
+
+            document.getElementById('utTimerText').innerText = utTimer.toFixed(1) + "s";
+
+            // Soul movement via Keyboard
+            const speed = 150 * dt;
+            if (utKeys['ArrowUp'] || utKeys['w'] || utKeys['W']) utSoul.y = Math.max(10, utSoul.y - speed);
+            if (utKeys['ArrowDown'] || utKeys['s'] || utKeys['S']) utSoul.y = Math.min(190, utSoul.y + speed);
+            if (utKeys['ArrowLeft'] || utKeys['a'] || utKeys['A']) utSoul.x = Math.max(10, utSoul.x - speed);
+            if (utKeys['ArrowRight'] || utKeys['d'] || utKeys['D']) utSoul.x = Math.min(310, utSoul.x + speed);
+
+            if (utSoul.invinc > 0) utSoul.invinc -= dt;
+
+            // Spawn Bullets randomly
+            if (Math.random() < 0.15) {
+                const types = ['⏰', '💤', '😭', '📝', '🌵'];
+                const t = types[Math.floor(Math.random() * types.length)];
+                
+                // Spawn from edges
+                let bx, by, bvx, bvy;
+                if (Math.random() < 0.5) {
+                    bx = Math.random() < 0.5 ? 0 : 320;
+                    by = Math.random() * 200;
+                } else {
+                    bx = Math.random() * 320;
+                    by = Math.random() < 0.5 ? 0 : 200;
+                }
+
+                const angle = Math.atan2(utSoul.y - by, utSoul.x - bx);
+                const bSpeed = 60 + Math.random() * 80;
+                bvx = Math.cos(angle) * bSpeed;
+                bvy = Math.sin(angle) * bSpeed;
+
+                utBullets.push({ x: bx, y: by, vx: bvx, vy: bvy, type: t, r: 10 });
+            }
+
+            // Update Bullets
+            utBullets.forEach(b => {
+                b.x += b.vx * dt;
+                b.y += b.vy * dt;
+
+                // Collision detection
+                if (utSoul.invinc <= 0) {
+                    const dist = Math.hypot(b.x - utSoul.x, b.y - utSoul.y);
+                    if (dist < utSoul.size + b.r - 2) {
+                        utSoul.hp -= 4;
+                        utSoul.invinc = 0.6; // 0.6s invincibility
+                        playBeep(200, 0.1, 'sawtooth');
+
+                        document.getElementById('utHpText').innerText = Math.max(0, utSoul.hp) + " / " + utSoul.maxHp;
+                        document.getElementById('utHpBarInner').style.width = (Math.max(0, utSoul.hp) / utSoul.maxHp * 100) + "%";
+
+                        if (utSoul.hp <= 0) {
+                            utLose();
+                            return;
+                        }
+                    }
+                }
             });
-            playBeep(600, 0.08);
+
+            // Clean offscreen bullets
+            utBullets = utBullets.filter(b => b.x >= -20 && b.x <= 340 && b.y >= -20 && b.y <= 220);
+
+            // Render Arena
+            utCtx.fillStyle = "#000";
+            utCtx.fillRect(0, 0, 320, 200);
+
+            // Draw Soul (Heart ❤️)
+            if (utSoul.invinc <= 0 || Math.floor(now / 50) % 2 === 0) {
+                utCtx.fillStyle = "red";
+                utCtx.beginPath();
+                utCtx.arc(utSoul.x, utSoul.y, utSoul.size, 0, Math.PI * 2);
+                utCtx.fill();
+            }
+
+            // Draw Bullets
+            utCtx.font = "14px 'Press Start 2P', monospace";
+            utCtx.textAlign = "center";
+            utCtx.textBaseline = "middle";
+            utBullets.forEach(b => {
+                utCtx.fillText(b.type, b.x, b.y);
+            });
+
+            if (utActive) {
+                utAnimFrame = requestAnimationFrame(utLoop);
+            }
+        }
+
+        function utWin() {
+            utActive = false;
+            playWinFanfare();
+            triggerConfetti();
+
+            undertaleBuff = 0.35; // Gain +35% probability boost!
+            lethargyDecay = 0.0;  // Reset lethargy completely!
+
+            document.getElementById('utDialogueBox').innerHTML = `
+                <span style="color:var(--accent-green);">* 完美的閃避戰鬥！(SURVIVED)</span><br>
+                * 黃玉翔被你的精神感動，出席機率巨幅增加 <strong style="color:var(--accent-gold);">+35%</strong>！
+            `;
+
             updateUI();
-            addLog(`🎲 肉鴿聖物重組完成！`);
+            addLog(`⚔️ Undertale 彈幕戰勝：獲得 +35% 出席加成，怠惰歸零！`);
+            setTimeout(() => closeUndertaleBattle(), 2200);
+        }
+
+        function utLose() {
+            utActive = false;
+            playFailSound();
+
+            lethargyDecay += 0.15; // Penalty: +15% lethargy
+            document.getElementById('utDialogueBox').innerHTML = `
+                <span style="color:var(--accent-red);">* 你被怠惰彈幕擊敗了... (GAME OVER)</span><br>
+                * 黃玉翔翻個身繼續沉睡，怠惰感額外增加 +15%...
+            `;
+
+            updateUI();
+            addLog(`✖ Undertale 彈幕戰敗：怠惰感增加 +15%`);
+            setTimeout(() => closeUndertaleBattle(), 2200);
+        }
+
+        function utAction(actType) {
+            playBeep(500, 0.05);
+            const box = document.getElementById('utDialogueBox');
+            if (actType === 'FIGHT') {
+                box.innerHTML = "* 你給了黃玉翔一記【鬧鐘連擊】！<br>* 黃玉翔的睡意減弱了，但彈幕繼續湧來！";
+            } else if (actType === 'ACT') {
+                box.innerHTML = "* 你對黃玉翔大喊：「Timing很重要，快點來啦！」<br>* 黃玉翔微微張開了眼睛！";
+            } else if (actType === 'ITEM') {
+                box.innerHTML = "* 你使用了【超好吃起司蛋餅】！<br>* 你的 HP 恢復了 10 點！";
+                utSoul.hp = Math.min(utSoul.maxHp, utSoul.hp + 10);
+                document.getElementById('utHpText').innerText = utSoul.hp + " / " + utSoul.maxHp;
+                document.getElementById('utHpBarInner').style.width = (utSoul.hp / utSoul.maxHp * 100) + "%";
+            } else if (actType === 'MERCY') {
+                box.innerHTML = "* 你試圖饒恕黃玉翔的睡意...<br>* 但他睡得太香了，無法饒恕！繼續避險！";
+            }
+        }
+
+        // --- Common Logic ---
+        function refreshChoiceEvent() {
+            currentChoiceIdx = Math.floor(Math.random() * choiceDeck.length);
+            const evt = choiceDeck[currentChoiceIdx];
+
+            document.getElementById('choiceEventTitle').innerText = evt.title;
+            document.getElementById('choiceEventDesc').innerText = evt.desc;
+
+            document.getElementById('optAText').innerText = 'A. ' + evt.optA.text;
+            document.getElementById('optAVal').innerText = (evt.optA.val >= 0 ? '+' : '') + Math.round(evt.optA.val * 100) + '%';
+
+            document.getElementById('optBText').innerText = 'B. ' + evt.optB.text;
+            document.getElementById('optBVal').innerText = (evt.optB.val >= 0 ? '+' : '') + Math.round(evt.optB.val * 100) + '%';
+
+            document.getElementById('choiceFeedback').innerText = '👈 點擊抉擇改變黃玉翔命運！';
+            
+            const cardBox = document.getElementById('choiceCardBox');
+            cardBox.classList.remove('pop-in-box');
+            void cardBox.offsetWidth;
+            cardBox.classList.add('pop-in-box');
+        }
+
+        function makeChoice(optKey) {
+            if (isSpinning) return;
+            playBeep( optKey === 'A' ? 650 : 350, 0.08 );
+
+            const evt = choiceDeck[currentChoiceIdx];
+            const choiceObj = optKey === 'A' ? evt.optA : evt.optB;
+
+            playerChoiceModifier = choiceObj.val;
+
+            document.getElementById('choiceFeedback').innerHTML = `
+                <strong style="color:${choiceObj.val>=0?'var(--accent-green)':'var(--accent-red)'}">
+                    ${choiceObj.msg}
+                </strong>
+            `;
+
+            updateUI();
+            addLog(`抉擇【${evt.title}】選擇 ${optKey}: ${choiceObj.msg}`);
+        }
+
+        function resetLethargy() {
+            if (isSpinning) return;
+            lethargyDecay = 0.0;
+            playBeep(880, 0.1);
+            updateUI();
+            addLog(`🔄 清空自然怠惰累積度！`);
         }
 
         function selectDay(day) {
@@ -827,28 +1317,26 @@
         function calculateProbability(mode, dayKey) {
             let prob = mode === 'AM' ? 0.46 : 0.84;
 
-            // Main subject penalty
             const dayData = timetable[dayKey];
             const subjects = mode === 'AM' ? dayData.am : dayData.pm;
             const mainCount = subjects.filter(s => s.main).length;
+            prob -= (mainCount * 0.05);
 
-            let penaltyPerSubject = relics.R4 ? 0.10 : 0.05; // R4 doubles penalty
-            prob -= (mainCount * penaltyPerSubject);
+            prob -= lethargyDecay;
+            prob += playerChoiceModifier;
+            prob += undertaleBuff;
 
-            // Relic Modifiers
-            if (relics.R1) prob += 0.12; // Alarm
-            if (relics.R2) prob -= 0.22; // Blue Archive
-            if (relics.R3) prob -= 0.10; // Brawl Stars
-
-            // Phone Buff
             if (phoneBuffActive) prob += 0.15;
 
-            return Math.min(Math.max(prob, 0.05), 0.95);
+            return Math.min(Math.max(prob, 0.03), 0.97);
         }
 
         function updateUI() {
+            const decayPercent = Math.round(lethargyDecay * 100);
+            document.getElementById('decayPercentText').innerText = `-${decayPercent}%`;
+            document.getElementById('decayBarInner').style.width = Math.min(decayPercent * 2, 100) + '%';
+
             const dayData = timetable[currentDay];
-            
             let amHTML = dayData.am.map(s => `<span class="subject-tag ${s.main?'tag-main':'tag-easy'}">${s.name}</span>`).join('');
             let pmHTML = dayData.pm.map(s => `<span class="subject-tag ${s.main?'tag-main':'tag-easy'}">${s.name}</span>`).join('');
             
@@ -870,7 +1358,7 @@
             drawWheel(currentProb);
         }
 
-        // Canvas Wheel
+        // --- Canvas Wheel ---
         const canvas = document.getElementById('wheelCanvas');
         const ctx = canvas.getContext('2d');
 
@@ -902,9 +1390,9 @@
             ctx.save();
             ctx.rotate(angleYes / 2);
             ctx.fillStyle = '#000';
-            ctx.font = '900 15px "Press Start 2P", "Noto Sans TC"';
+            ctx.font = '900 14px "Press Start 2P", "Noto Sans TC"';
             ctx.textAlign = 'right';
-            ctx.fillText('會來 ' + Math.round(probYes * 100) + '%', radius - 18, 5);
+            ctx.fillText('會來 ' + Math.round(probYes * 100) + '%', radius - 16, 5);
             ctx.restore();
 
             // NO Sector
@@ -921,9 +1409,9 @@
             ctx.save();
             ctx.rotate(angleYes + angleNo / 2);
             ctx.fillStyle = '#fff';
-            ctx.font = '900 15px "Press Start 2P", "Noto Sans TC"';
+            ctx.font = '900 14px "Press Start 2P", "Noto Sans TC"';
             ctx.textAlign = 'right';
-            ctx.fillText('不來 ' + Math.round((1 - probYes) * 100) + '%', radius - 18, 5);
+            ctx.fillText('不來 ' + Math.round((1 - probYes) * 100) + '%', radius - 16, 5);
             ctx.restore();
 
             // Rim Dots
@@ -969,7 +1457,7 @@
             const extraRounds = (5 + Math.floor(Math.random() * 3)) * 2 * Math.PI;
             const finalAngle = extraRounds + (1.5 * Math.PI - targetSectorAngle);
 
-            const duration = 3000;
+            const duration = 2800;
             const startTime = performance.now();
             const startAngle = currentAngle % (2 * Math.PI);
             let lastTick = startAngle;
@@ -992,12 +1480,16 @@
                 } else {
                     isSpinning = false;
                     
+                    lethargyDecay += 0.06;
+                    undertaleBuff = 0.0; // Consume Undertale buff after spin
+
                     if (phoneBuffActive) {
                         phoneBuffActive = false;
                         document.getElementById('phoneStatus').innerText = "待命 (電話BUFF已使用)";
                     }
 
                     handleResult(isYes, probYes);
+                    refreshChoiceEvent();
                     if (onComplete) onComplete(isYes);
                 }
             }
@@ -1015,15 +1507,15 @@
                 playWinFanfare();
                 triggerConfetti();
                 resBox.innerHTML = `
-                    <div style="color:var(--accent-green); font-size:1.05rem; font-weight:bold;" class="bounce-text">🎉 【${dayName} ${modeText}】黃玉翔 會來！</div>
-                    <div style="font-size:0.78rem; color:#ddd; margin-top:4px;">算出機率 ${percentStr}，擊破萬難成功出席！</div>
+                    <div style="color:var(--accent-green); font-size:1rem; font-weight:bold;" class="bounce-text">🎉 【${dayName} ${modeText}】黃玉翔 會來！</div>
+                    <div style="font-size:0.72rem; color:#ddd; margin-top:3px;">機率 ${percentStr}，擊破彈幕與怠惰成功出席！</div>
                 `;
                 addLog(`${dayName}${modeText}: <span class="tag-yes">【會來】</span> (機率: ${percentStr})`);
             } else {
                 playFailSound();
                 resBox.innerHTML = `
-                    <div style="color:var(--accent-red); font-size:1.05rem; font-weight:bold;" class="pop-in-box">✖ 【${dayName} ${modeText}】黃玉翔 不會來！</div>
-                    <div style="font-size:0.78rem; color:#ddd; margin-top:4px;">算出機率 ${percentStr}，床上沉睡不可抗力...</div>
+                    <div style="color:var(--accent-red); font-size:1rem; font-weight:bold;" class="pop-in-box">✖ 【${dayName} ${modeText}】黃玉翔 不會來！</div>
+                    <div style="font-size:0.72rem; color:#ddd; margin-top:3px;">自然怠惰過高 (${percentStr})，沉睡不可抗力...</div>
                 `;
                 addLog(`${dayName}${modeText}: <span class="tag-no">【不來】</span> (機率: ${percentStr})`);
             }
@@ -1033,7 +1525,7 @@
         function spinFullDay() {
             if (isSpinning) return;
             const resBox = document.getElementById('resultBox');
-            resBox.innerHTML = `<div style="color:var(--accent-gold); font-size:0.95rem; font-weight:bold;" class="bounce-text">⚡ 進行 ${timetable[currentDay].name} 全日雙考驗...</div>`;
+            resBox.innerHTML = `<div style="color:var(--accent-gold); font-size:0.88rem; font-weight:bold;" class="bounce-text">⚡ 進行 ${timetable[currentDay].name} 全日雙考驗...</div>`;
 
             currentMode = 'AM';
             updateUI();
@@ -1044,14 +1536,14 @@
                     updateUI();
                     spinWheel((pmYes) => {
                         let comment = "";
-                        if (amYes && pmYes) comment = "👑 雙喜臨門！今日完美全勤！";
-                        else if (!amYes && pmYes) comment = "⏰ 上午缺席，下午精準歸隊！";
-                        else if (amYes && !pmYes) comment = "🏃 上午快閃，下午提早消失！";
-                        else comment = "💤 遊戲與床鋪雙重誘惑！整天人間蒸發！";
+                        if (amYes && pmYes) comment = "👑 雙喜臨門！拯救怠惰成功！";
+                        else if (!amYes && pmYes) comment = "⏰ 上午缺席，下午順利歸隊！";
+                        else if (amYes && !pmYes) comment = "🏃 上午看完就溜，下午提早消失！";
+                        else comment = "💤 怠惰積重難返，整天人間蒸發！";
 
                         resBox.innerHTML = `
-                            <div style="color:var(--accent-gold); font-size:0.95rem; font-weight:bold;">⚡ ${timetable[currentDay].name} 雙考驗結果：</div>
-                            <div style="font-size:0.8rem; color:#fff; margin-top:4px;">
+                            <div style="color:var(--accent-gold); font-size:0.88rem; font-weight:bold;">⚡ ${timetable[currentDay].name} 雙考驗結果：</div>
+                            <div style="font-size:0.75rem; color:#fff; margin-top:3px;">
                                 上午: ${amYes ? '<span class="tag-yes">會來</span>' : '<span class="tag-no">不來</span>'} | 
                                 下午: ${pmYes ? '<span class="tag-yes">會來</span>' : '<span class="tag-no">不來</span>'}<br>
                                 <strong>評語：${comment}</strong>
@@ -1086,18 +1578,19 @@
                     am: amYes,
                     pm: pmYes
                 });
+
+                lethargyDecay += 0.04;
             });
 
-            // Display Weekly Modal
             const rate = totalAttended / 10;
             let rank = 'F';
             let title = '【徹底失聯】';
-            let comment = '一整週幾乎看不到人影，導師與同學皆在尋找您！';
+            let comment = '怠惰累積太高！一整週幾乎找不到人影！';
 
-            if (rate >= 0.9) { rank = 'S'; title = '👑 【出席率戰神】'; comment = '簡直是楷模！連課表主科與遊戲誘惑都無法阻止您！'; }
-            else if (rate >= 0.7) { rank = 'A'; title = '✨ 【穩定出席達人】'; comment = '表現優異，偶爾睡過頭但整體出席相當可靠！'; }
-            else if (rate >= 0.5) { rank = 'B'; title = '🎲 【 Timing 大師】'; comment = '出席全看 Timing 與心情，成功維持 50% 微妙平衡！'; }
-            else if (rate >= 0.3) { rank = 'C'; title = '💤 【床鋪守護者】'; comment = '一週有一半的時間被床鋪封印，需要熱線急催！'; }
+            if (rate >= 0.9) { rank = 'S'; title = '👑 【出席率戰神】'; comment = '彈幕神級閃避！徹底擊破自然怠惰封印！'; }
+            else if (rate >= 0.7) { rank = 'A'; title = '✨ 【穩定出席達人】'; comment = '救援成功，整體出席狀況相當良好！'; }
+            else if (rate >= 0.5) { rank = 'B'; title = '🎲 【 Timing 大師】'; comment = '全靠玩家彈幕與抉擇撐場，維護 50% 微妙平衡！'; }
+            else if (rate >= 0.3) { rank = 'C'; title = '💤 【床鋪守護者】'; comment = '怠惰感急升！需要 Undertale 戰鬥與熱線急催！'; }
 
             document.getElementById('weeklyRank').innerText = 'RANK ' + rank;
             document.getElementById('weeklyTitle').innerText = title + ` (出席: ${totalAttended}/10 次)`;
@@ -1119,6 +1612,7 @@
             if (rate >= 0.5) triggerConfetti();
             else playFailSound();
 
+            updateUI();
             addLog(`🗓️ 進行一週大結算：最終結算 Rank ${rank} (${totalAttended}/10)`);
         }
 
@@ -1129,10 +1623,10 @@
         function speakRandomQuote() {
             playBeep(440, 0.08);
             const quotes = [
-                "Timing真的很重要好嗎！",
+                "進入 Undertale 戰場，用靈魂拯救我的出席率！",
+                "Timing真的很重要！",
                 "這堂有主科？那我考慮一下...",
-                "蔚藍檔案/荒野亂鬥開新賽季了！",
-                "武陵 307 出席考驗，走起！",
+                "起司蛋餅送到門口我就出發！",
                 "一週結算？看我抽個 Rank S 給你看！"
             ];
             const bubble = document.getElementById('speechBubble');
@@ -1189,6 +1683,7 @@
 
         // Init
         document.getElementById('day-' + currentDay).classList.add('active');
+        refreshChoiceEvent();
         updateUI();
     </script>
 </body>
